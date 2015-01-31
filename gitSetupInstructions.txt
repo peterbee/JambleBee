@@ -1,0 +1,30 @@
+How to set a linux machine to use git with gouda (Note that we have to use http rather than ssh for gitlab on gouda)
+
+First you must set up your account on gitlab. You should have recieved an email from Dr Paul with instructions.
+
+Step 1.
+Run the command "git clone https://gouda.msudenver.edu/gitlab/contrivance/synchronized-video-collaboration.git"
+If the command works, then these instructions do not apply to you and you are done.
+If you get this error 
+error: server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none while accessing https://git.MYDOMAIN.com/root/MYPROJECT.git/info/refs?service=git-upload-pack
+then please continue.
+
+Step 2.
+Create a new folder for the gouda certificate in the correct directory
+
+# cd /usr/share/ca-certificates/
+# mkdir gouda.msudenver.edu
+
+Step 3. 
+Visit https://gouda.msudenver.edu/ and download the certificate from your browser. In Chrome this can be done by right clicking on the lock with the red X on it to the left of the URL field. Then click on "certificate information." Click on the "Details" tab and then click the export button at the bottom of the window. Save this certiciate file into the folder you created called "/usr/share/ca-certificates/gouda.msudenver.edu"
+
+Step 4.
+edit the file /etc/ca-certificates.conf and add "gouda.msudenver.edu/gouda.msudenver.edu" to the bottom.
+
+Step 5.
+Update the ca-certificates by running the following command
+# update-ca-certificates
+
+Step 6.
+Run the command "git clone https://gouda.msudenver.edu/gitlab/contrivance/synchronized-video-collaboration.git"
+You will have to enter your username and password.
