@@ -1,7 +1,9 @@
-How to set a linux machine to use git with gouda (Note that we have to use http rather than ssh for gitlab on gouda)
+How to set a mac or linux machine to use git with gouda (Note that we have to use http rather than ssh for gitlab on gouda)
 
 First you must set up your account on gitlab. You should have recieved an email from Dr Paul with instructions.
 
+FOR LINUX
+---------
 Step 1.
 Run the command "git clone https://gouda.msudenver.edu/gitlab/contrivance/synchronized-video-collaboration.git"
 If the command works, then these instructions do not apply to you and you are done.
@@ -28,3 +30,33 @@ Update the ca-certificates by running the following command
 Step 6.
 Run the command "git clone https://gouda.msudenver.edu/gitlab/contrivance/synchronized-video-collaboration.git"
 You will have to enter your username and password.
+
+
+
+FOR MAC
+-------
+Step 1.
+Run the command "git clone https://gouda.msudenver.edu/gitlab/contrivance/synchronized-video-collaboration.git"
+If the command works, then these instructions do not apply to you and you are done.
+
+Step 2.
+Run these commands with your git info:
+  git config --global user.name "username"
+  git config --global user.email "email@domain.com"
+  git config --global --bool --add http.sslVerify false
+
+
+This is what my .gitconfig file looks like:
+
+[user]
+        name = sterling
+        email = szerr1@msudenver.edu
+[http]
+        sslVerify = false
+
+
+Step 3.
+Run the clone command again:
+  git clone https://gouda.msudenver.edu/gitlab/contrivance/synchronized-video-collaboration.git
+
+Mac FTW
