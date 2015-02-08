@@ -4,6 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var multer = require('multer'); //for file uploading
+var done =false
+var filePath = ''
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -12,7 +15,8 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
 
 
 // uncomment after placing your favicon in /public
@@ -22,6 +26,42 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+/**
+ * Use multer to perform file uploading to certain file path
+ */
+app.use(multer({ dest: './uploads/',
+    rename: function (fieldname, filename) {
+        return filename+Date.now();
+    },
+    onFileUploadStart: function (file) {
+        console.log("MIME TYPE : " + file.mimetype)
+        if(file.mimetype!="video/mp4"){ //error if not mp4
+            //Should do some error here
+        }
+        console.log(file.originalname + ' is starting ...')
+    },
+    onFileUploadComplete: function (file) {
+        //console.log(file)
+        console.log(file.fieldname + ' uploaded to  ' + file.path)
+        filePath=file.path
+        done=true;
+    }
+}));
+
+//put the post here because we need the boolean done to check
+app.post('/videos/upload',function(req,res){
+    if(done==true) {
+        //console.log(res.files)
+        res.send("<h3>File uploaded : </h3>" )
+       // "<video width='300' height='300' controls><source src =\"" +filePath +  "\" type=\"video/mp4\"></video> ");
+        //Meant to show the video just uploaded but not playing
+    }
+    else { //not done or error
+        res.send("<h3>Wrong mime type or error while uploading</h3>")
+    }
+
+});
+
 
 app.use('/', routes);
 app.use('/users', users);

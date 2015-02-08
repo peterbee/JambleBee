@@ -1,5 +1,17 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{title}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>Testing upload</title>
+</head>
+<body>
+<form id        =  "uploadForm"
+enctype   =  "multipart/form-data"
+action    =  "/api/photo"
+method    =  "post"
+>
+<input type="file" name="userPhoto" />
+<input type="submit" value="Upload Image" name="submit">
+</form>
+</body>
+</html>
