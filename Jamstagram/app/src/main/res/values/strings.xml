@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Jamstagram</string>
+    <string name="load_vid__action">Load Video</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
