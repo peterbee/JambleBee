@@ -5,39 +5,26 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 public class MainActivity extends Activity {
 
   //   String vidLoc = "http://www.jsharkey.org/downloads/dailytest.3gp";
     String vidLoc = null;
     String filePrefix = "sdcard/DCIM/Camera/";
-    // you will need to change this to a video file on your device
+    MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        if (vidLoc != null) {
-//            VideoView video = (VideoView) findViewById(R.id.video);
-//            MediaController mediaController = new MediaController(this);
-//            mediaController.setAnchorView(video);
-//
-//            Uri uri = Uri.parse(vidLoc);
-//            video.setVideoURI(uri);
-//            video.setMediaController(mediaController);
-//
-//            video.start();
-//            video.requestFocus();
-//            vidLoc = null;
-//        }
+        mediaController = new MediaController(this);
     }
 
     @Override
@@ -61,33 +48,32 @@ public class MainActivity extends Activity {
     }
 
     public void loadVideo() {
-        final CharSequence[] videosArray = (CharSequence[]) new File(filePrefix).list();
+        File mediaDir = new File(filePrefix);
+        final CharSequence[] videosArray = mediaDir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+               return filename.endsWith(".mp4");
+            }
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        AlertDialog.Builder builder1 = builder
-                .setTitle("Pick a video")
-                .setItems(videosArray, new DialogInterface.OnClickListener() {
+        builder.setTitle("Pick a video")
+               .setItems(videosArray, new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+                       vidLoc = filePrefix + videosArray[id];
+                       VideoView video = (VideoView) findViewById(R.id.video);
+                       mediaController.setAnchorView(video);
 
-                    public void onClick(DialogInterface dialog, int id) {
-                        vidLoc = filePrefix + (String) videosArray[id];
-                    }
-                });
+                       Uri uri = Uri.parse(vidLoc);
+                       video.setVideoURI(uri);
+                       video.setMediaController(mediaController);
+
+                       video.start();
+                       video.requestFocus();
+                       vidLoc = null;
+                   }
+               });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-        if (vidLoc != null) {
-            VideoView video = (VideoView) findViewById(R.id.video);
-            MediaController mediaController = new MediaController(this);
-            mediaController.setAnchorView(video);
-
-            Uri uri = Uri.parse(vidLoc);
-            video.setVideoURI(uri);
-            video.setMediaController(mediaController);
-
-            video.start();
-            video.requestFocus();
-            vidLoc = null;
-        }
-
     }
-
 }
