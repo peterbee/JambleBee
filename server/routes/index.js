@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/videos/donwnload/:id', videos.downloadById);
+router.get('/videos/download/:id', videos.downloadById);
 router.get('/videos/upload',videos.upload)
 
 
