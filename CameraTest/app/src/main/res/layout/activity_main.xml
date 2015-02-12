@@ -20,5 +20,5 @@
             android:id="@+id/button_capture"
             android:layout_gravity="bottom"
             android:onClick="onCaptureClick"
-            android:text="@string/btnCapture"/>
+            android:text="record"/>
 </FrameLayout>
