@@ -12,6 +12,9 @@ router.get('/', function(req, res, next) {
 
 router.get('/videos/download/:id', videos.downloadById);
 router.get('/videos/upload',videos.upload)
+router.get('/test',function(req,res,next){
+    res.render('uploadTest');
+})
 
 
 

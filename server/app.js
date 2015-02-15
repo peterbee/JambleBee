@@ -29,14 +29,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  * Use multer to perform file uploading to certain file path
  */
-app.use(multer({ dest: './uploads/',
+app.use(multer({ dest: './videos/',
     rename: function (fieldname, filename) {
         return filename+Date.now();
     },
     onFileUploadStart: function (file) {
         console.log("MIME TYPE : " + file.mimetype)
         if(file.mimetype!="video/mp4"){ //error if not mp4
-            //Should do some error here
+            return false;
         }
         console.log(file.originalname + ' is starting ...')
     },
@@ -52,7 +52,7 @@ app.use(multer({ dest: './uploads/',
 app.post('/videos/upload',function(req,res){
     if(done==true) {
         //console.log(res.files)
-        res.send("<h3>File uploaded : </h3>" )
+        res.send("<h3>File uploaded  </h3>" )
        // "<video width='300' height='300' controls><source src =\"" +filePath +  "\" type=\"video/mp4\"></video> ");
         //Meant to show the video just uploaded but not playing
     }
