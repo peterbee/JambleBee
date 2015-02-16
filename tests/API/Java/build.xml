@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="RunDownloadTest" name="APItest">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="APItest.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/commons-codec-1.9.jar"/>
+        <pathelement location="lib/commons-logging-1.2.jar"/>
+        <pathelement location="lib/fluent-hc-4.4.jar"/>
+        <pathelement location="lib/httpclient-4.4.jar"/>
+        <pathelement location="lib/httpclient-cache-4.4.jar"/>
+        <pathelement location="lib/httpclient-win-4.4.jar"/>
+        <pathelement location="lib/httpcore-4.4.jar"/>
+        <pathelement location="lib/httpmime-4.4.jar"/>
+        <pathelement location="lib/jna-4.1.0.jar"/>
+        <pathelement location="lib/jna-platform-4.1.0.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.xtend"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="APItest.classpath"/>
+        </javac>
+    </target>
+    <target name="RunDownloadTest" depends="build">
+        <java classname="DownloadTest" failonerror="true" fork="yes">
+            <classpath refid="APItest.classpath"/>
+        </java>
+    </target>
+</project>
