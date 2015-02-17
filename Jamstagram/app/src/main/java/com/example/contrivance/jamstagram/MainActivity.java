@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
             mCamera.lock();         // take camera access back from MediaRecorder
 
             // inform the user that recording has stopped
-            setCaptureButtonText(" done record");
+            setCaptureButtonText((String) getResources().getText(R.string.btnDef));
             isRecording = false;
             releaseCamera();
             // END_INCLUDE(stop_release_media_recorder)
@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
         } else {
 
             // BEGIN_INCLUDE(prepare_start_media_recorder)
-            setCaptureButtonText("record");
+            setCaptureButtonText((String) getResources().getText(R.string.btnCapture));
             new MediaPrepareTask().execute(null, null, null);
 
             // END_INCLUDE(prepare_start_media_recorder)
