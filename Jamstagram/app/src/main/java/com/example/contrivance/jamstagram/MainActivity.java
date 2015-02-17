@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -70,11 +69,13 @@ public class MainActivity extends Activity {
         } else {
 
             // BEGIN_INCLUDE(prepare_start_media_recorder)
-            setCaptureButtonText((String) getResources().getText(R.string.btnCapture));
-            new MediaPrepareTask().execute(null, null, null);
-
+            if (vidLoc != null) {
+                setCaptureButtonText((String) getResources().getText(R.string.btnCapture));
+                new MediaPrepareTask().execute(null, null, null);
+            } else {
+               // show alert that video selected is null .
+            }
             // END_INCLUDE(prepare_start_media_recorder)
-
         }
     }
     //Record
@@ -123,7 +124,8 @@ public class MainActivity extends Activity {
         Camera.Parameters parameters = mCamera.getParameters();
         List<Camera.Size> mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
         Camera.Size optimalSize = CameraHelper.getOptimalPreviewSize(mSupportedPreviewSizes,
-                mPreview.getWidth(), mPreview.getHeight());
+                                                                     mPreview.getWidth(),
+                                                                     mPreview.getHeight());
 
         // Use the same size for recording profile.
         CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
@@ -238,7 +240,6 @@ public class MainActivity extends Activity {
                });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
     }
 
     //record
@@ -254,7 +255,6 @@ public class MainActivity extends Activity {
                 video.start();
                 video.requestFocus();
                 vidLoc = null;
-
                 isRecording = true;
             } else {
                 // prepare didn't work, release the camera

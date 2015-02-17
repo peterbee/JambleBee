@@ -82,7 +82,6 @@ public class CameraHelper {
         return Camera.open();
     }
 
-
     /**
      * @return the default rear/back facing camera on the device. Returns null if camera is not
      * available.
