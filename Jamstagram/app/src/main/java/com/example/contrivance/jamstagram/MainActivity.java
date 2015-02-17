@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
     String vidLoc = null;
     String filePrefix = "sdcard/DCIM/Camera/";
     MediaController mediaController;
+    VideoView video;
 
     //Recording
     private Camera mCamera;
@@ -222,16 +223,16 @@ public class MainActivity extends Activity {
                    public void onClick(DialogInterface dialog, int id) {
                        vidLoc = filePrefix + videosArray[id];
 
-                       VideoView video = (VideoView) findViewById(R.id.video);
+                       video = (VideoView) findViewById(R.id.video);
                        mediaController.setAnchorView(video);
 
                        Uri uri = Uri.parse(vidLoc);
                        video.setVideoURI(uri);
                        video.setMediaController(mediaController);
 
-                       video.start();
-                       video.requestFocus();
-                       vidLoc = null;
+                       // video.start();
+                       // video.requestFocus();
+                       // vidLoc = null;
 
                    }
                });
@@ -250,6 +251,9 @@ public class MainActivity extends Activity {
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
                 mMediaRecorder.start();
+                video.start();
+                video.requestFocus();
+                vidLoc = null;
 
                 isRecording = true;
             } else {
