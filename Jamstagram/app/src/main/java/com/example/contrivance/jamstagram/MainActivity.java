@@ -158,12 +158,11 @@ public class MainActivity extends Activity {
         mMediaRecorder.setProfile(profile);
 
         // Step 4: Set output file
-//        mMediaRecorder.setOutputFile(CameraHelper.getOutputMediaFile(
-//                CameraHelper.MEDIA_TYPE_VIDEO).toString());
-        mMediaRecorder.setOutputFile(new File("sdcard/DCIM/Camera/","something.mp4").getAbsolutePath());
-
-        System.out.println(new File("sdcard/DCIM/Camera/","something.mp4").getAbsolutePath());
-        // END_INCLUDE (configure_media_recorder)
+        File temp = CameraHelper.getOutputMediaFile(filePrefix);
+        if (temp == null) {
+            return false;
+        }
+        mMediaRecorder.setOutputFile(temp.getAbsolutePath());
 
         // Step 5: Prepare configured MediaRecorder
         try {

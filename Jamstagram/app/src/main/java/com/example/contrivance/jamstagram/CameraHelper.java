@@ -117,10 +117,25 @@ public class CameraHelper {
             Camera.getCameraInfo(i, cameraInfo);
             if (cameraInfo.facing == position) {
                 return Camera.open(i);
-
             }
         }
-
         return null;
+    }
+
+    public  static File getOutputMediaFile(String directory){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
+            return  null;
+        }
+
+        if (!new File(directory).isDirectory()) {
+            return null;
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile = new File(directory, "VID_"+ timeStamp + ".mp4");
+        return mediaFile;
     }
 }
