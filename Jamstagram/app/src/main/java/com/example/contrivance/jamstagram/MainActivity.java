@@ -265,4 +265,23 @@ public class MainActivity extends Activity {
         }
     }
     //done
+
+
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("Position", video.getCurrentPosition());
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        int position = savedInstanceState.getInt("Position");
+        video.seekTo(position);
+    }
+
+
+
+
+
+
 }
