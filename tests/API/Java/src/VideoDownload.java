@@ -14,12 +14,10 @@ public class VideoDownload {
 	
 	public static final String DOWNLOAD_API_CALL = "/videos/download";
 	
-	private String saveLocation;
 	private String videoName;
 	private String host;
 	
-	public VideoDownload(String hostIn, String saveLocationIn, String videoNameIn) {
-		saveLocation = saveLocationIn;
+	public VideoDownload(String hostIn, String videoNameIn) {
 		videoName = videoNameIn;
 		host = hostIn;
 	}
@@ -31,7 +29,7 @@ public class VideoDownload {
 		return httpclient.execute(get);
 	}
 	
-	public void saveFile(HttpResponse response) throws IllegalStateException, IOException {
+	public void saveFile(HttpResponse response, String saveLocation) throws IllegalStateException, IOException {
 		InputStream input = null;
 		OutputStream output = null;
 		byte[] buffer = new byte[1024];

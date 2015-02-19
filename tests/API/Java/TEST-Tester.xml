@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="Wurm" name="Tester" tests="1" time="0.851" timestamp="2015-02-19T01:05:30">
+<testsuite errors="0" failures="0" hostname="Wurm" name="Tester" tests="2" time="241.135" timestamp="2015-02-19T02:44:23">
   <properties>
     <property name="java.vendor" value="Oracle Corporation" />
     <property name="osgi.bundles.defaultStartLevel" value="4" />
@@ -19,7 +19,7 @@
     <property name="ant.home" value="/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502" />
     <property name="java.runtime.version" value="1.8.0_20-b26" />
     <property name="osgi.instance.area" value="file:/home/guy/workspaces/SWE/" />
-    <property name="org.osgi.framework.uuid" value="e014a8f9-c5b7-0014-14e9-f75c8d7b2fb1" />
+    <property name="org.osgi.framework.uuid" value="a034402a-d7b7-0014-1098-904735c8c28e" />
     <property name="org.eclipse.m2e.log.dir" value="/home/guy/workspaces/SWE/.metadata/.plugins/org.eclipse.m2e.logback.configuration" />
     <property name="user.name" value="guy" />
     <property name="osgi.framework.extensions" value="reference:file:org.eclipse.osgi.compatibility.state_1.0.1.v20140709-1414.jar,reference:file:org.eclipse.fx.osgi_1.1.0.201411050602.jar" />
@@ -37,7 +37,6 @@
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64" />
     <property name="org.osgi.framework.system.capabilities" value="osgi.ee; osgi.ee=&quot;OSGi/Minimum&quot;; version:List&lt;Version&gt;=&quot;1.0, 1.1, 1.2&quot;,osgi.ee; osgi.ee=&quot;JRE&quot;; version:List&lt;Version&gt;=&quot;1.0, 1.1&quot;,osgi.ee; osgi.ee=&quot;JavaSE&quot;; version:List&lt;Version&gt;=&quot;1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8&quot;,osgi.ee; osgi.ee=&quot;JavaSE/compact1&quot;; version:List&lt;Version&gt;=&quot;1.8&quot;,osgi.ee; osgi.ee=&quot;JavaSE/compact2&quot;; version:List&lt;Version&gt;=&quot;1.8&quot;,osgi.ee; osgi.ee=&quot;JavaSE/compact3&quot;; version:List&lt;Version&gt;=&quot;1.8&quot;" />
     <property name="ant.project.default-target" value="test" />
-    <property name="org.eclipse.php.debug.ui.activeDebugging" value="true" />
     <property name="osgi.compatibility.bootdelegation" value="true" />
     <property name="ant.project.name" value="Armcore" />
     <property name="java.version" value="1.8.0_20" />
@@ -60,7 +59,7 @@
     <property name="org.eclipse.equinox.launcher.splash.location" value="/home/guy/eclipse//plugins/org.eclipse.platform_4.4.0.v20140925-0400/splash.bmp" />
     <property name="java.home" value="/usr/lib/jvm/java-8-oracle/jre" />
     <property name="osgi.os" value="linux" />
-    <property name="eclipse.commands" value="-os&#xa;linux&#xa;-ws&#xa;gtk&#xa;-arch&#xa;x86_64&#xa;-showsplash&#xa;/home/guy/eclipse//plugins/org.eclipse.platform_4.4.0.v20140925-0400/splash.bmp&#xa;-launcher&#xa;/home/guy/eclipse/eclipse&#xa;-name&#xa;Eclipse&#xa;--launcher.library&#xa;/home/guy/eclipse//plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_1.1.200.v20140603-1326/eclipse_1605.so&#xa;-startup&#xa;/home/guy/eclipse//plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar&#xa;--launcher.appendVmargs&#xa;-exitdata&#xa;7b8005&#xa;-product&#xa;org.eclipse.epp.package.jee.product&#xa;-vm&#xa;/usr/bin/java&#xa;" />
+    <property name="eclipse.commands" value="-data&#xa;/home/guy/workspaces/SWE&#xa;-os&#xa;linux&#xa;-ws&#xa;gtk&#xa;-arch&#xa;x86_64&#xa;-showsplash&#xa;/home/guy/eclipse//plugins/org.eclipse.platform_4.4.0.v20140925-0400/splash.bmp&#xa;-launcher&#xa;/home/guy/eclipse/eclipse&#xa;-name&#xa;Eclipse&#xa;--launcher.library&#xa;/home/guy/eclipse//plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_1.1.200.v20140603-1326/eclipse_1605.so&#xa;-startup&#xa;/home/guy/eclipse//plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar&#xa;--launcher.appendVmargs&#xa;-exitdata&#xa;7b8005&#xa;-product&#xa;org.eclipse.epp.package.jee.product&#xa;-vm&#xa;/usr/bin/java&#xa;" />
     <property name="java.vm.info" value="mixed mode" />
     <property name="osgi.splashLocation" value="/home/guy/eclipse//plugins/org.eclipse.platform_4.4.0.v20140925-0400/splash.bmp" />
     <property name="ant.file" value="/home/guy/synchronized-video-collaboration/tests/API/Java/build.xml" />
@@ -91,23 +90,23 @@
     <property name="test.dir" value="/home/guy/synchronized-video-collaboration/tests/API/Java/src" />
     <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib" />
     <property name="java.vendor.url" value="http://java.oracle.com/" />
+    <property name="eclipse.startTime" value="1424309547844" />
     <property name="eclipse.p2.data.area" value="@config.dir/../p2/" />
     <property name="org.osgi.framework.os.version" value="3.16.0" />
-    <property name="eclipse.startTime" value="1424302164806" />
     <property name="java.vm.vendor" value="Oracle Corporation" />
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
     <property name="java.class.path" value="/home/guy/synchronized-video-collaboration/tests/API/Java/lib/ant-junit-1.8.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/commons-codec-1.9.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/commons-logging-1.2.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/fluent-hc-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/hamcrest-core-1.3.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpclient-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpclient-cache-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpclient-win-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpcore-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpmime-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/jna-4.1.0.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/jna-platform-4.1.0.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/junit-4.12.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/bin:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-launcher.jar:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant.jar:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-junit.jar:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-junit4.jar" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner Tester filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/guy/synchronized-video-collaboration/tests/API/Java/TEST-Tester.xml crashfile=/home/guy/synchronized-video-collaboration/tests/API/Java/junitvmwatcher7381438935422697675.properties propsfile=/home/guy/synchronized-video-collaboration/tests/API/Java/junit3774559685076135118.properties" />
     <property name="ant.version" value="Apache Ant(TM) version 1.9.2 compiled on July 8 2013" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner Tester filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/guy/synchronized-video-collaboration/tests/API/Java/TEST-Tester.xml crashfile=/home/guy/synchronized-video-collaboration/tests/API/Java/junitvmwatcher8896209084079286625.properties propsfile=/home/guy/synchronized-video-collaboration/tests/API/Java/junit3102835159066846249.properties" />
     <property name="clientencoding" value="iso8859-1" />
     <property name="osgi.requiredJavaVersion" value="1.6" />
     <property name="org.eclipse.update.reconcile" value="false" />
     <property name="eclipse.vm" value="/usr/bin/java" />
-    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
     <property name="ant.file.type.Armcore" value="file" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
     <property name="java.vm.specification.version" value="1.8" />
-    <property name="sun.cpu.endian" value="little" />
     <property name="sun.os.patch.level" value="unknown" />
+    <property name="sun.cpu.endian" value="little" />
     <property name="gosh.args" value="--nointeractive" />
     <property name="eclipse.pdebuild.home" value="/home/guy/eclipse/plugins/org.eclipse.pde.build_3.9.0.v20140415-2029/./" />
     <property name="java.io.tmpdir" value="/tmp" />
@@ -115,8 +114,8 @@
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/" />
     <property name="eclipse.product" value="org.eclipse.epp.package.jee.product" />
     <property name="eclipse.home.location" value="file:/home/guy/eclipse/" />
-    <property name="os.arch" value="amd64" />
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment" />
+    <property name="os.arch" value="amd64" />
     <property name="java.ext.dirs" value="/usr/lib/jvm/java-8-oracle/jre/lib/ext:/usr/java/packages/lib/ext" />
     <property name="user.dir" value="/home/guy" />
     <property name="org.osgi.supports.framework.requirebundle" value="true" />
@@ -138,7 +137,16 @@
     <property name="osgi.configuration.area" value="file:/home/guy/eclipse/configuration/" />
     <property name="osgi.logfile" value="/home/guy/workspaces/SWE/.metadata/.log" />
   </properties>
-  <testcase classname="Tester" name="test" time="0.823" />
+  <testcase classname="Tester" name="uploadTest" time="241.077" />
+  <testcase classname="Tester" name="downloadTest" time="0.028" />
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <system-err><![CDATA[Feb 18, 2015 7:46:23 PM org.apache.http.impl.execchain.RetryExec execute
+INFO: I/O exception (java.net.SocketException) caught when processing request to {}->http://guygrigsby.com:3000: Connection reset
+Feb 18, 2015 7:46:23 PM org.apache.http.impl.execchain.RetryExec execute
+INFO: Retrying request to {}->http://guygrigsby.com:3000
+Feb 18, 2015 7:48:24 PM org.apache.http.impl.execchain.RetryExec execute
+INFO: I/O exception (java.net.SocketException) caught when processing request to {}->http://guygrigsby.com:3000: Connection reset
+Feb 18, 2015 7:48:24 PM org.apache.http.impl.execchain.RetryExec execute
+INFO: Retrying request to {}->http://guygrigsby.com:3000
+]]></system-err>
 </testsuite>
