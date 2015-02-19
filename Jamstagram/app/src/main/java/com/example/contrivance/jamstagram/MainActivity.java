@@ -4,24 +4,36 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
+
+import android.provider.MediaStore.Video.Thumbnails;
 
 public class MainActivity extends Activity {
 
@@ -39,7 +51,11 @@ public class MainActivity extends Activity {
     private boolean isRecording = false;
     private static final String TAG = "Recorder";
     private Button captureButton;
-
+    private Button stop;
+    int charArrSize = 0;
+    private ImageView thumbnail;
+    private Bitmap bThumbnail;
+    private List<ImageView> thumbnailList = new ArrayList<ImageView>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,32 +66,64 @@ public class MainActivity extends Activity {
         //Record
         mPreview = (TextureView) findViewById(R.id.surface_view);
         captureButton = (Button) findViewById(R.id.button_capture);
+        stop = (Button) findViewById(R.id.stop_recording);
+
+        thumbnail = (ImageView) findViewById(R.id.thumbnail_mini);
+//        bThumbnail = ThumbnailUtils.createVideoThumbnail
+//                ("sdcard/DCIM/Camera/something.mp4", Thumbnails.MINI_KIND);
+//        thumbnail.setImageBitmap(bThumbnail);
     }
     public void onCaptureClick(View view) {
+
         if (isRecording) {
             // BEGIN_INCLUDE(stop_release_media_recorder)
+            switch(view.getId()) {
+                case R.id.stop_recording:
+                    // stop recording and release camera
+                    mMediaRecorder.stop();  // stop the recording
+                    releaseMediaRecorder(); // release the MediaRecorder object
+                    mCamera.lock();         // take camera access back from MediaRecorder
 
-            // stop recording and release camera
-            mMediaRecorder.stop();  // stop the recording
-            releaseMediaRecorder(); // release the MediaRecorder object
-            mCamera.lock();         // take camera access back from MediaRecorder
-
-            // inform the user that recording has stopped
-            setCaptureButtonText((String) getResources().getText(R.string.btnDef));
-            isRecording = false;
-            releaseCamera();
-            // END_INCLUDE(stop_release_media_recorder)
-
-        } else {
-
+                    // inform the user that recording has stopped
+                    //setCaptureButtonText((String) getResources().getText(R.string.btnDef));
+                    isRecording = false;
+                    releaseCamera();
+                    captureButton.setEnabled(true);
+                    stop.setEnabled(false);
+                    break;
+            }
+//            // stop recording and release camera
+//            mMediaRecorder.stop();  // stop the recording
+//            releaseMediaRecorder(); // release the MediaRecorder object
+//            mCamera.lock();         // take camera access back from MediaRecorder
+//
+//            // inform the user that recording has stopped
+//            setCaptureButtonText((String) getResources().getText(R.string.btnDef));
+//            isRecording = false;
+//            releaseCamera();
+//            // END_INCLUDE(stop_release_media_recorder)
+        }
+        else {
             // BEGIN_INCLUDE(prepare_start_media_recorder)
-            if (vidLoc != null) {
-                setCaptureButtonText((String) getResources().getText(R.string.btnCapture));
+            if (vidLoc != null){
+                //setCaptureButtonText((String) getResources().getText(R.string.btnCapture));
+                switch(view.getId()) {
+                    case R.id.button_capture:
+                        captureButton.setEnabled(false);
+                        stop.setEnabled(true);
+                        break;
+//                    case R.id.stop_recording:
+//                        captureButton.setEnabled(false);
+//                        stop.setEnabled(true);
+//                        break;
+                }
                 new MediaPrepareTask().execute(null, null, null);
-            } else {
+            }
+            else {
                // show alert that video selected is null .
             }
             // END_INCLUDE(prepare_start_media_recorder)
+
         }
     }
     //Record
@@ -203,8 +251,6 @@ public class MainActivity extends Activity {
             case R.id.actionLoadVideo:
                 loadVideo();
                 break;
-            //record
-
         }
         return super.onOptionsItemSelected(item);
         //done
@@ -215,29 +261,46 @@ public class MainActivity extends Activity {
         final CharSequence[] videosArray = mediaDir.list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
-               return filename.endsWith(".mp4");
+                return filename.endsWith(".mp4");
             }
         });
 
+        //final CharSequence[] thumbnailCharList = new CharSequence[1];
+
+        //for(int i = 0; i < videosArray.length; i++){
+//        bThumbnail = ThumbnailUtils.createVideoThumbnail
+//            ("sdcard/DCIM/Camera/something.mp4", Thumbnails.MINI_KIND);
+//        thumbnail.setImageBitmap(bThumbnail);
+//        thumbnailList.add(thumbnail);
+
+        //}
+
+        ArrayList<String> strs = new ArrayList<String>();
+        for(ImageView data : thumbnailList) {
+            strs.add(data.toString());
+        }
+        CharSequence[] thumbnailCharList =
+                strs.toArray(new CharSequence[strs.size()]);
+
+        //thumbnail.setImageResource(R.drawable.ic_launcher);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick a video")
                .setItems(videosArray, new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       vidLoc = filePrefix + videosArray[id];
 
-                       video = (VideoView) findViewById(R.id.video);
-                       mediaController.setAnchorView(video);
+            public void onClick(DialogInterface dialog, int id) {
+                vidLoc = filePrefix + videosArray[id];
+                video = (VideoView) findViewById(R.id.video);
+                mediaController.setAnchorView(video);
 
-                       Uri uri = Uri.parse(vidLoc);
-                       video.setVideoURI(uri);
-                       video.setMediaController(mediaController);
+                Uri uri = Uri.parse(vidLoc);
+                video.setVideoURI(uri);
+                video.setMediaController(mediaController);
 
-                       // video.start();
-                       // video.requestFocus();
-                       // vidLoc = null;
-
-                   }
-               });
+                // video.start();
+                // video.requestFocus();
+                // vidLoc = null;
+            }
+        });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

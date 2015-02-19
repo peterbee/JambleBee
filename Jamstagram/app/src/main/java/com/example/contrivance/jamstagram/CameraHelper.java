@@ -1,6 +1,8 @@
 package com.example.contrivance.jamstagram;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.hardware.Camera;
 import android.os.Build;
 import android.annotation.TargetApi;
