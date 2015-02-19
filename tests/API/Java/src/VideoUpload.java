@@ -35,7 +35,6 @@ public class VideoUpload {
 	public HttpResponse executeRequest() throws ClientProtocolException,
 			IOException {
 		HttpClient httpclient = HttpClientBuilder.create().build();
-		String fileName = videoPath.getFileName().toString();
 		HttpPost post = new HttpPost(String.format("%s%s", host, UPLOAD_API_CALL));
 		File video = new File(videoPath.toUri());
 		// Create entity which wraps content of the file to be uploaded any and
