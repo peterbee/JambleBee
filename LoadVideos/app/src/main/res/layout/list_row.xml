@@ -13,7 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/row_image"
-            android:contentDescription="thumbnail" />
+            android:contentDescription="thumbnail"
+            android:layout_marginLeft="10dp" />
     </LinearLayout>
 
     <LinearLayout

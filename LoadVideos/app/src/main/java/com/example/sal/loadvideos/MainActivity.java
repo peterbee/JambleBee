@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
                 return filename.endsWith(".mp4");
             }
         });
-
+        System.out.println(videosArray.length);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = (View) getLayoutInflater().inflate(R.layout.list_view, null);
         ListView listView =(ListView) view.findViewById(R.id.list_view_1);
