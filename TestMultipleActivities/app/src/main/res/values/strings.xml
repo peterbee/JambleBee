@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">TestMultipleActivities</string>
+
+    <string name="title_activity_video_projects_browser">Video Projects Browser</string>
+    <string name="title_activity_video_project_editor">Video Project Editor</string>
+
+    <!-- Main Activity Settings Menu -->
+    <string name="action_video_project_browser">Browse Projects</string>
+    <string name="action_edit_project_browser">Edit Projects</string>
+
+</resources>
