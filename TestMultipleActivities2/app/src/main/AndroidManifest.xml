@@ -17,12 +17,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VideoProjectsBrowserActivity"
+            android:name=".VideoProjectEditor"
             android:label="@string/title_activity_video_project_editor" >
         </activity>
         <activity
-            android:name=".VideoProjectEditorActivity"
-            android:label="@string/title_activity_video_project_editor" >
+            android:name=".VideoProjectBrowser"
+            android:label="@string/title_activity_video_project_browser" >
         </activity>
     </application>
 

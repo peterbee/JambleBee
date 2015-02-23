@@ -6,19 +6,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class VideoProjectsBrowserActivity extends Activity {
+public class VideoProjectEditor extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_projects_brower);
+        setContentView(R.layout.activity_video_project_editor);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_projects_brower, menu);
+        getMenuInflater().inflate(R.menu.menu_video_project_editor, menu);
         return true;
     }
 
