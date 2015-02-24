@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">TestMultipleActivities</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world_browser">Hello world! Browser</string>
+    <string name="hello_world_main">Hello world! Main</string>
+    <string name="hello_world_editor">Hello world! Editor</string>
     <string name="action_settings">Settings</string>
+
     <string name="title_activity_video_project_editor">VideoProjectEditor</string>
     <string name="title_activity_video_project_browser">VideoProjectBrowser</string>
+
+    <string name="action_browser">Project Browser</string>
+    <string name="action_editor">Project Editor</string>
+    <string name="action_main">Main Activity</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.sal.testmultipleactivities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +31,17 @@ public class VideoProjectEditor extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()) {
+            case R.id.menu_editor_browser:
+                startActivity(new Intent(VideoProjectEditor.this, VideoProjectBrowser.class));
+                // switch activity
+                return true;
+            case R.id.menu_editor_main:
+                startActivity(new Intent(VideoProjectEditor.this, MainActivity.class));
+                // switch activity
+                return true;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
