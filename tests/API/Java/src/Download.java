@@ -2,9 +2,18 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-
+/**
+ * Download interface is used to download a file from the server
+ * @author guy
+ *
+ */
 public interface Download {
-
+	/**
+	 * Executes the HTTP request
+	 * @return the server response
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	public abstract HttpResponse executeRequest()
 			throws ClientProtocolException, IOException;
 	/**
