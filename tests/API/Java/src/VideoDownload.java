@@ -9,7 +9,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-public class VideoDownload {
+public class VideoDownload implements Download {
 	
 	public static final String DOWNLOAD_API_CALL = "/videos/download";
 	
@@ -21,6 +21,10 @@ public class VideoDownload {
 		host = hostIn;
 	}
 	
+	/* (non-Javadoc)
+	 * @see Download#executeRequest()
+	 */
+	@Override
 	public HttpResponse executeRequest() throws ClientProtocolException, IOException {
 		HttpClient httpclient = HttpClientBuilder.create().build();
 		HttpGet get = new HttpGet(
@@ -28,14 +32,18 @@ public class VideoDownload {
 		return httpclient.execute(get);
 	}
 	
-	public void saveFile(HttpResponse response, String saveLocation) throws IllegalStateException, IOException {
+	/* (non-Javadoc)
+	 * @see Download#saveFile(org.apache.http.HttpResponse, java.lang.String)
+	 */
+	@Override
+	public String saveFile(HttpResponse response, String saveLocation) throws IllegalStateException, IOException {
 		InputStream input = null;
 		OutputStream output = null;
+		String fullFilePath = String.format("%s/%s.mp4", saveLocation, videoName);
 		byte[] buffer = new byte[1024];
 
 		try {
 			input = response.getEntity().getContent();
-			String fullFilePath = String.format("%s/%s.mp4", saveLocation, videoName);
 			output = new FileOutputStream(fullFilePath);
 			for (int length; (length = input.read(buffer)) > 0;) {
 				output.write(buffer, 0, length);
@@ -52,6 +60,7 @@ public class VideoDownload {
 				} catch (IOException logOrIgnore) {
 				}
 		}
+		return fullFilePath;
 	}
 	
 }

@@ -14,7 +14,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
-public class VideoUpload {
+public class VideoUpload implements Upload {
 
 	private static final String UPLOAD_API_CALL = "/videos/upload";
 	private Path videoPath;
@@ -32,6 +32,10 @@ public class VideoUpload {
 		host = hostIn;
 	}
 
+	/* (non-Javadoc)
+	 * @see Upload#executeRequest()
+	 */
+	@Override
 	public HttpResponse executeRequest() throws ClientProtocolException,
 			IOException {
 		HttpClient httpclient = HttpClientBuilder.create().build();
@@ -60,10 +64,8 @@ public class VideoUpload {
 			EntityUtils.consume(resEntity);
 			/* Checking response */
 			if (response != null) {
-				InputStream in = response.getEntity().getContent(); // Get the
-																	// data in
-																	// the
-																	// entity
+				InputStream in = response.getEntity().getContent(); 
+				//TODO verify upload
 			}
 		}
 		return response;
