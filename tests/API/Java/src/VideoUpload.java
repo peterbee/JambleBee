@@ -32,18 +32,21 @@ public class VideoUpload implements Upload {
 		host = hostIn;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see Upload#executeRequest()
 	 */
 	@Override
 	public HttpResponse executeRequest() throws ClientProtocolException,
 			IOException {
 		HttpClient httpclient = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(String.format("%s%s", host, UPLOAD_API_CALL));
+		HttpPost post = new HttpPost(String.format("%s%s", host,
+				UPLOAD_API_CALL));
 		File video = new File(videoPath.toUri());
 		// Create entity which wraps content of the file to be uploaded any and
 		// additional parameters
-		MultipartEntityBuilder builder = MultipartEntityBuilder.create();        
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
 		/* example for setting a HttpMultipartMode */
 		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -51,7 +54,7 @@ public class VideoUpload implements Upload {
 		/* example for adding an image part */
 		FileBody fileBody = new FileBody(video);
 		builder.addPart("video", fileBody);
-		
+
 		// Add multipart entity object to the HTTP post object
 		post.setEntity(builder.build());
 		// send the post request to the server
@@ -64,8 +67,8 @@ public class VideoUpload implements Upload {
 			EntityUtils.consume(resEntity);
 			/* Checking response */
 			if (response != null) {
-				InputStream in = response.getEntity().getContent(); 
-				//TODO verify upload
+				InputStream in = response.getEntity().getContent();
+				// TODO verify upload
 			}
 		}
 		return response;

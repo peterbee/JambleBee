@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 app.use(multer({ dest: './videos/',
     rename: function (fieldname, filename) {
-        return filename+Date.now();
+        return filename;
     },
     onFileUploadStart: function (file) {
         console.log("MIME TYPE : " + file.mimetype)
