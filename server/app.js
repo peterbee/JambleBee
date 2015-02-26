@@ -36,9 +36,15 @@ app.use(multer({ dest: './videos/',
     onFileUploadStart: function (file) {
         console.log("MIME TYPE : " + file.mimetype)
         if(file.mimetype!="video/mp4"){ //error if not mp4
+            done = false
             return false;
         }
         console.log(file.originalname + ' is starting ...')
+    },
+    onError: function(err){
+      console.log(err);
+        done = false;
+        return false;
     },
     onFileUploadComplete: function (file) {
         //console.log(file)
