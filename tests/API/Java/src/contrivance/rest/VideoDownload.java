@@ -1,15 +1,16 @@
+package contrivance.rest;
+
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 
 public class VideoDownload implements Download {
 
@@ -17,7 +18,11 @@ public class VideoDownload implements Download {
 
 	private String videoName;
 	private String host;
-
+	/**
+	 * 
+	 * @param hostIn the host running the server
+	 * @param videoNameIn the name of the video without extension
+	 */
 	public VideoDownload(String hostIn, String videoNameIn) {
 		videoName = videoNameIn;
 		host = hostIn;

@@ -10,6 +10,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 
+import contrivance.rest.Download;
+import contrivance.rest.Upload;
+import contrivance.rest.VideoDownload;
+import contrivance.rest.VideoUpload;
+
 public class Tester {
 
 	private static final String HOST = "http://guygrigsby.com:3000";
@@ -19,7 +24,7 @@ public class Tester {
 	@Test
 	public void downloadTest() {
 
-		String videoName = "catVideo";
+		String videoName = "catVideo1";
 		try {
 			downloadVideo(LOCAL_SAVE_LOCATION, videoName);
 		} catch (Exception e) {
