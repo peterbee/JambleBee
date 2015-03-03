@@ -1,7 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.sal.testmultipleactivities.VideoProjectEditor">
-    <item
+
+ <!--   <item
         android:id="@+id/menu_editor_browser"
         android:title="@string/action_browser"
         android:orderInCategory="100"
@@ -10,5 +11,5 @@
         android:id="@+id/menu_editor_main"
         android:title="@string/action_main"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="never" />         -->
 </menu>

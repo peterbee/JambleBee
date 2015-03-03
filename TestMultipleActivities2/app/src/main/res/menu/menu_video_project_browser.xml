@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.sal.testmultipleactivities.VideoProjectBrowser">
 
-    <item
+ <!--    <item
         android:id="@+id/menu_browser_action_editor"
         android:title="@string/action_editor"
         android:orderInCategory="100"
@@ -12,5 +12,5 @@
         android:id="@+id/menu_browser_action_main"
         android:title="@string/action_main"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="never" />         -->
 </menu>
