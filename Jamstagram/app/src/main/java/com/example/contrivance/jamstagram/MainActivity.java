@@ -275,12 +275,12 @@ public class MainActivity extends Activity {
 
         //}
 
-        ArrayList<String> strs = new ArrayList<String>();
-        for(ImageView data : thumbnailList) {
-            strs.add(data.toString());
-        }
-        CharSequence[] thumbnailCharList =
-                strs.toArray(new CharSequence[strs.size()]);
+//        ArrayList<String> strs = new ArrayList<String>();
+//        for(ImageView data : thumbnailList) {
+//            strs.add(data.toString());
+//        }
+//        CharSequence[] thumbnailCharList =
+//                strs.toArray(new CharSequence[strs.size()]);
 
         //thumbnail.setImageResource(R.drawable.ic_launcher);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -295,10 +295,6 @@ public class MainActivity extends Activity {
                 Uri uri = Uri.parse(vidLoc);
                 video.setVideoURI(uri);
                 video.setMediaController(mediaController);
-
-                // video.start();
-                // video.requestFocus();
-                // vidLoc = null;
             }
         });
         AlertDialog alertDialog = builder.create();
@@ -327,5 +323,5 @@ public class MainActivity extends Activity {
             return true;
         }
     }
-    //done
+//    done
 }
