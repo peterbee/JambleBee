@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
+import android.content.res.Configuration;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -279,9 +281,22 @@ public class MainActivity extends Activity {
         video.seekTo(position);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+   //     if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+   //         mCamera.stopPreview();
+   //         mCamera.setDisplayOrientation(0);
+   //         mCamera.startPreview();
+   //     }
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mCamera.stopPreview();
+            mCamera.setDisplayOrientation(0);
+            mCamera.startPreview();
+        }
 
-
+    }
 
 
 }
