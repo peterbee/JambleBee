@@ -7,6 +7,11 @@ var bodyParser = require('body-parser');
 var multer = require('multer'); //for file uploading
 var done =false
 var filePath = ''
+var DB_PATH = 'localhost/jamble'
+var monk = require('monk')
+var db = monk(DB_PATH)
+
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -68,6 +73,11 @@ app.post('/videos/upload',function(req,res){
 
 });
 
+///setup some mock database for testing
+app.use(function(req,res,next){
+    req.db = db
+    next()
+})
 
 app.use('/', routes);
 app.use('/users', users);
@@ -78,6 +88,8 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+
 
 // error handlers
 

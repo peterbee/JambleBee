@@ -3,6 +3,10 @@
  */
 var request  = require('request')
 var fs = require('fs')
+var monk = require('monk')
+var DB_PATH = "localhost:27017/jamble"
+var db = monk(DB_PATH)
+
 
 request('http://guygrigsby.com:3000/videos/download/catVideo')
 //request('http://localhost:3000/videos/download/catVideo')
@@ -23,5 +27,7 @@ var req = request.post(postUrl, function (err, resp, body) {
         console.log('URL: ' + body);
     }
 });
+
+
 var form = req.form();
 form.append('file',fs.createReadStream('doodle.mp4'))
