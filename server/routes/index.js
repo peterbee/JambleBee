@@ -13,8 +13,10 @@ router.get('/', function(req, res, next) {
 router.get('/videos/download/:id', videos.downloadById);
 router.get('/videos/upload',videos.upload)
 
-router.get('/data/project/:projectId', configData.getProjectInfo)
-router.get('data/video/:videoId',configData.getVideoInfo)
+router.get('/data/get_project/:projectId', configData.getProjectInfo)
+router.get('/data/get_video/:videoId',configData.getVideoInfo)
+router.post('/data/post_project',configData.postProjectInfo)
+router.post('/data/post_video',configData.postVideoInfo)
 router.get('/test',function(req,res){
     var db = req.db
     var projectInfo = db.get("projectInfo")
