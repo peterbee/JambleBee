@@ -19,12 +19,24 @@ exports.getProjectInfo = function(req,res){
 //Post projectInfo
 exports.postProjectInfo = function(req,res){
     var object={}
-    var body = req.body
-    object.id = body.projectId
-    object.name = body.projectName
+    var body = req.body.projectData
+    object.id = body.id
+    object.name = body.name
     object.videoList = body.videoList //JSON object of videos and their start and end time
     object.owner = body.owner
+    object.createdAt = body.createdAt
+    object.origId = body.origId
+    object.parentId = body.parentId
     projectData.update({"id":object.id},object,{upsert:true})
+        .then(function(err,result){
+            if(err) {
+                res.json(err)
+            }
+            else{
+                res.json(result)
+            }
+        })
+
 
 
 
@@ -43,14 +55,27 @@ exports.getVideoInfo = function(req,res){
 exports.postVideoInfo = function(req,res){
 
     var object={}
-    var body = req.body
-    object.id = body.videoId
-    object.name = body.videotName
+    var body = req.body.videoData
+    object.id = body.id
+    object.name = body.name
     object.projectList = body.projectList //JSON object of projects the video belong to
     object.owner = body.owner
-    object.startTime = req.startTime // in Unix time
-    object.endTime = req.endTime
-    videosData.update({"id":object.id},object,{upsert:true})
+    object.startTime = body.startTime // in Unix time
+    object.endTime = body.endTime
+    object.size = body.size
+    object.length = body.length
+    object.createdAt = req.createdAt
+
+
+    videosData.update({"id":object.id},object,{upsert:true}).then(function(err,result){
+        if(err){
+            res.json(err)
+        }
+        else {
+            res.json(result)
+        }
+    })
+
 
 
 }
