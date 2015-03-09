@@ -4,6 +4,7 @@
     <string name="app_name">Jamstagram</string>
     <string name="load_vid__action">Load Video</string>
     <string name="btnCapture">recording, press to stop</string>
+    <string name="pressToStop">press to stop </string>
     <string name="btnDef">press to record</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

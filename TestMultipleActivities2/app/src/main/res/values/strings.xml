@@ -1,0 +1,22 @@
+<resources>
+    <!-- Global String -->
+    <string name="app_name">TestMultipleActivities</string>
+    <string name="action_settings">Settings</string>
+    <string name="go_to_main">click here to go back to main</string>
+
+    <!-- Activity Main string -->
+    <string name="action_main">Main Activity</string>
+    <string name="title_activity_video_project_editor">VideoProjectEditor</string>
+    <string name="title_activity_video_project_browser">VideoProjectBrowser</string>
+    <string name="record"> record </string>
+    <string name="editor"> go to video project editor </string>
+    <string name="browser"> go to video project browser </string>
+    <string name="upload"> upload </string>
+
+    <!-- Activity Project Browser -->
+    <string name="action_browser">Project Browser</string>
+
+    <!-- Activity Project Editor -->
+    <string name="action_editor">Project Editor</string>
+
+</resources>
