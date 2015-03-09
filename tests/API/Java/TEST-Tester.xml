@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="Wurm" name="Tester" tests="2" time="0.298" timestamp="2015-02-19T03:27:11">
+  <properties>
+    <property name="java.vendor" value="Oracle Corporation" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="eclipse.pdebuild.templates" value="/home/guy/eclipse/plugins/org.eclipse.pde.build_3.9.0.v20140415-2029/templates//" />
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers" />
+    <property name="ant.file.Armcore" value="/home/guy/synchronized-video-collaboration/tests/API/Java/build.xml" />
+    <property name="os.name" value="Linux" />
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-8-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-8-oracle/jre/classes" />
+    <property name="sun.desktop" value="gnome" />
+    <property name="java.vm.specification.vendor" value="Oracle Corporation" />
+    <property name="ant.home" value="/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502" />
+    <property name="java.runtime.version" value="1.8.0_20-b26" />
+    <property name="user.name" value="guy" />
+    <property name="build.dir" value="/home/guy/synchronized-video-collaboration/tests/API/Java/bin" />
+    <property name="user.language" value="en" />
+    <property name="test.report.dir" value="/home/guy/synchronized-video-collaboration/tests/API/Java/testreport" />
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64" />
+    <property name="ant.project.default-target" value="test" />
+    <property name="ant.project.name" value="Armcore" />
+    <property name="java.version" value="1.8.0_20" />
+    <property name="user.timezone" value="America/Denver" />
+    <property name="sun.arch.data.model" value="64" />
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-8-oracle/jre/lib/endorsed" />
+    <property name="sun.cpu.isalist" value="" />
+    <property name="sun.jnu.encoding" value="UTF-8" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="file.separator" value="/" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="java.class.version" value="52.0" />
+    <property name="user.country" value="US" />
+    <property name="java.home" value="/usr/lib/jvm/java-8-oracle/jre" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="ant.file" value="/home/guy/synchronized-video-collaboration/tests/API/Java/build.xml" />
+    <property name="os.version" value="3.16.0-4-amd64" />
+    <property name="path.separator" value=":" />
+    <property name="java.vm.version" value="25.20-b23" />
+    <property name="ant.library.dir" value="/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib" />
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit" />
+    <property name="eclipse.pdebuild.scripts" value="/home/guy/eclipse/plugins/org.eclipse.pde.build_3.9.0.v20140415-2029/scripts//" />
+    <property name="user.home" value="/home/guy" />
+    <property name="java.specification.vendor" value="Oracle Corporation" />
+    <property name="test.dir" value="/home/guy/synchronized-video-collaboration/tests/API/Java/src" />
+    <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib" />
+    <property name="java.vendor.url" value="http://java.oracle.com/" />
+    <property name="java.vm.vendor" value="Oracle Corporation" />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner Tester filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/guy/synchronized-video-collaboration/tests/API/Java/TEST-Tester.xml crashfile=/home/guy/synchronized-video-collaboration/tests/API/Java/junitvmwatcher641133923665924909.properties propsfile=/home/guy/synchronized-video-collaboration/tests/API/Java/junit6978996100003864511.properties" />
+    <property name="java.class.path" value="/home/guy/synchronized-video-collaboration/tests/API/Java/lib/ant-junit-1.8.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/commons-codec-1.9.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/commons-logging-1.2.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/fluent-hc-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/hamcrest-core-1.3.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpclient-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpclient-cache-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpclient-win-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpcore-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/httpmime-4.4.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/jna-4.1.0.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/jna-platform-4.1.0.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/lib/junit-4.12.jar:/home/guy/synchronized-video-collaboration/tests/API/Java/bin/tests:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-launcher.jar:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant.jar:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-junit.jar:/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-junit4.jar" />
+    <property name="ant.version" value="Apache Ant(TM) version 1.9.2 compiled on July 8 2013" />
+    <property name="ant.file.type.Armcore" value="file" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="java.vm.specification.version" value="1.8" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.os.patch.level" value="unknown" />
+    <property name="eclipse.pdebuild.home" value="/home/guy/eclipse/plugins/org.eclipse.pde.build_3.9.0.v20140415-2029/.//" />
+    <property name="java.io.tmpdir" value="/tmp" />
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/" />
+    <property name="os.arch" value="amd64" />
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment" />
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-8-oracle/jre/lib/ext:/usr/java/packages/lib/ext" />
+    <property name="user.dir" value="/home/guy/synchronized-video-collaboration/tests/API/Java" />
+    <property name="build.test.dir" value="/home/guy/synchronized-video-collaboration/tests/API/Java/bin/tests" />
+    <property name="line.separator" value="&#xa;" />
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM" />
+    <property name="basedir" value="/home/guy/synchronized-video-collaboration/tests/API/Java" />
+    <property name="ant.java.version" value="1.8" />
+    <property name="ant.core.lib" value="/home/guy/eclipse/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant.jar" />
+    <property name="file.encoding" value="UTF-8" />
+    <property name="java.specification.version" value="1.8" />
+    <property name="src.dir" value="/home/guy/synchronized-video-collaboration/tests/API/Java/src" />
+    <property name="ant.project.invoked-targets" value="test" />
+  </properties>
+  <testcase classname="Tester" name="uploadTest" time="0.259" />
+  <testcase classname="Tester" name="downloadTest" time="0.011" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -7,11 +7,37 @@ var bodyParser = require('body-parser');
 var multer = require('multer'); //for file uploading
 var done =false
 var filePath = ''
+var DB_PATH = 'localhost/jamble'
+var monk = require('monk')
+var db = monk(DB_PATH)
+
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var videos = require('./routes/videos');
 var app = express();
+// Add headers
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', '*');
+
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,14 +57,20 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 app.use(multer({ dest: './videos/',
     rename: function (fieldname, filename) {
-        return filename+Date.now();
+        return filename;
     },
     onFileUploadStart: function (file) {
         console.log("MIME TYPE : " + file.mimetype)
         if(file.mimetype!="video/mp4"){ //error if not mp4
+            done = false
             return false;
         }
         console.log(file.originalname + ' is starting ...')
+    },
+    onError: function(err){
+      console.log(err);
+        done = false;
+        return false;
     },
     onFileUploadComplete: function (file) {
         //console.log(file)
@@ -62,6 +94,11 @@ app.post('/videos/upload',function(req,res){
 
 });
 
+///setup some mock database for testing
+app.use(function(req,res,next){
+    req.db = db
+    next()
+})
 
 app.use('/', routes);
 app.use('/users', users);
@@ -72,6 +109,8 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+
 
 // error handlers
 
