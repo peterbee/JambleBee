@@ -1,0 +1,22 @@
+<resources>
+    <!-- Global String -->
+    <string name="app_name">MultipleActivities</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Activity Main string -->
+    <string name="action_main">Main Activity</string>
+    <string name="title_activity_video_project_editor">VideoProjectEditor</string>
+    <string name="title_activity_video_project_browser">VideoProjectBrowser</string>
+    <string name="editor"> editor activity</string>
+    <string name="browser">browser activity</string>
+    <string name="upload"> upload </string>
+    <string name="pressToRecord">press to record</string>
+    <string name="pressToStop">press to stop </string>
+
+    <!-- Activity Project Browser -->
+    <string name="action_browser">Project Browser</string>
+
+    <!-- Activity Project Editor -->
+    <string name="action_editor">Project Editor</string>
+
+</resources>
