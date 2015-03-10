@@ -271,5 +271,8 @@ public class VideoProject extends JSONObject {
 			e.printStackTrace();
 		}
 	}
+	public String asJsonString() {
+		return super.toString();
+	}
 
 }
