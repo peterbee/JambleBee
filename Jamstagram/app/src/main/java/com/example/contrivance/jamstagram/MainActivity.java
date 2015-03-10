@@ -286,16 +286,13 @@ public class MainActivity extends Activity {
         builder.setTitle("Pick a video")
                .setItems(videosArray, new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
-                       vidLoc = filePrefix + videosArray[id];
+                        vidLoc = filePrefix + videosArray[id];
+                        video = (VideoView) findViewById(R.id.video);
+                        mediaController.setAnchorView(video);
 
-            public void onClick(DialogInterface dialog, int id) {
-                vidLoc = filePrefix + videosArray[id];
-                video = (VideoView) findViewById(R.id.video);
-                mediaController.setAnchorView(video);
-
-                Uri uri = Uri.parse(vidLoc);
-                video.setVideoURI(uri);
-                video.setMediaController(mediaController);
+                        Uri uri = Uri.parse(vidLoc);
+                        video.setVideoURI(uri);
+                        video.setMediaController(mediaController);
             }
         });
         AlertDialog alertDialog = builder.create();
