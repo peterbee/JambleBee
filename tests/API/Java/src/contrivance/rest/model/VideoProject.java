@@ -262,4 +262,7 @@ public class VideoProject extends JSONObject {
 	public void addVideo(String videoId) {
 		addVideo(videoId, -1, -1);
 	}
+	public String asJsonString() {
+		return super.toString();
+	}
 }
