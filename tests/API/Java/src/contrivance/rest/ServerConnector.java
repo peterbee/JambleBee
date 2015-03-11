@@ -23,14 +23,21 @@ import contrivance.rest.model.VideoProject;
 
 public class ServerConnector {
 
-	private static final Object GET_PROJECT_DATA = "/data/get_project";
-	private static final Object GET_VIDEO_DATA = "/data/get_video";
-	private static final Object POST_PROJECT_DATA = "/data/post_project";
-	private static final Object POST_VIDEO_DATA = "/data/post_video	";
+	private static final String GET_PROJECT_DATA = "/data/get_project";
+	private static final String GET_VIDEO_DATA = "/data/get_video";
+	private static final String POST_PROJECT_DATA = "/data/post_project";
+	private static final String POST_VIDEO_DATA = "/data/post_video	";
 
-	
-	
-	public String downloadVideo(String host, String saveLocation,
+	private String host;
+	/**
+	 * 
+	 * @param hostName the fully qualified host name (eg http://guygrigsby.com:3000)
+	 */
+	public ServerConnector(String hostName) {
+		host = hostName;
+	}
+
+	public String downloadVideo(String saveLocation,
 			String videoName) throws ClientProtocolException, IOException {
 		Download dl = new VideoDownload(host, videoName);
 		HttpResponse response = dl.executeRequest();
@@ -38,22 +45,22 @@ public class ServerConnector {
 		return saveLocation;
 	}
 
-	public void uploadVideo(String host, String fileName) throws ClientProtocolException,
+	public void uploadVideo(String fileName) throws ClientProtocolException,
 			IOException {
 		Path filePath = Paths.get(fileName);
 		Upload ul = new VideoUpload(host, filePath);
 		ul.executeRequest();
 	}
 	
-	public VideoProject downloadProjectData(String host, String projectId) throws ClientProtocolException, IOException, JSONException {
+	public String downloadProjectData(String projectId) throws ClientProtocolException, IOException, JSONException {
 		HttpGet get = new HttpGet(String.format("%s%s/%s", host,
 				GET_PROJECT_DATA, projectId));
 		String responseString = executeMethodWithJSONResponse(get);
-		return new VideoProject(responseString);
+		return responseString;
 		
 	}
 	
-	public VideoData downloadVideoData(String host, String videoId) throws ClientProtocolException, IOException, JSONException {
+	public VideoData downloadVideoData(String videoId) throws ClientProtocolException, IOException, JSONException {
 		HttpGet get = new HttpGet(String.format("%s%s/%s", host,
 				GET_VIDEO_DATA, videoId));
 		String responseString = executeMethodWithJSONResponse(get);
@@ -62,16 +69,16 @@ public class ServerConnector {
 		
 	}
 	
-	public JSONObject uploadProjectData(String host, VideoProject projectData) throws ClientProtocolException, IOException, JSONException {
+	public String uploadProjectData(VideoProject projectData) throws ClientProtocolException, IOException, JSONException {
 		HttpPost post = new HttpPost(String.format("%s%s/%s", host,
 				POST_PROJECT_DATA, projectData.getId()));
 		StringEntity entity = new StringEntity(projectData.asJsonString(), ContentType.create("application/json"));
 		post.setEntity(entity);
 		String responseString = executeMethodWithJSONResponse(post);
-		return new JSONObject(responseString);
+		return responseString;
 		
 	}
-	public JSONObject uploadVideoData(String host, VideoData videoData) throws ClientProtocolException, IOException, JSONException {
+	public JSONObject uploadVideoData(VideoData videoData) throws ClientProtocolException, IOException, JSONException {
 		HttpPost post = new HttpPost(String.format("%s%s/%s", host,
 				POST_VIDEO_DATA, videoData.getId()));
 		StringEntity entity = new StringEntity(videoData.asJsonString(), ContentType.create("application/json"));
