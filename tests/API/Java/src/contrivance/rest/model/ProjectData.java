@@ -10,7 +10,7 @@ import org.json.JSONObject;
 Body include an object named projectData with : 
 
  */
-public class VideoProject extends JSONObject {
+public class ProjectData extends JSONObject {
 	
 	public static final String ID = "id";
 	public static final String NAME = "name";
@@ -37,11 +37,11 @@ public class VideoProject extends JSONObject {
 			i.e {vid1:{startime:1234, endtime: 2345}, vid2:{starttime:2345,endtime:3345}}
 	 * @throws JSONException
 	 */
-	public VideoProject(String jsonInput) throws JSONException {
+	public ProjectData(String jsonInput) throws JSONException {
 		super(jsonInput);
 	}
 	
-	public VideoProject(Map<String, Object> map) throws JSONException {
+	public ProjectData(Map<String, Object> map) throws JSONException {
 		super();
 		long createdAt = System.currentTimeMillis();
 		Iterator<Map.Entry<String, Object>> it = map.entrySet().iterator();
