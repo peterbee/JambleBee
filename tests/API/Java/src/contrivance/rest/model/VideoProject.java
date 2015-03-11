@@ -19,12 +19,10 @@ public class VideoProject extends JSONObject {
 	public static final String CREATED_AT = "createdAt";
 	public static final String ORIGINAL_VID_ID = "origId";
 	public static final String PARENT_VID_ID = "parentId";
-	public static final String VIDEO_LIST = "parentId";
+	public static final String VIDEO_LIST = "videoList";
 	
 	public static final String START_TIME = "startime";
 	public static final String END_TIME = "endtime";
-	
-	private Map<String, TimeKeeper> videos;
 	
 	/**
 	 * Create a new video project
@@ -42,8 +40,6 @@ public class VideoProject extends JSONObject {
 	 */
 	public VideoProject(String jsonInput) throws JSONException {
 		super(jsonInput);
-		videos = new HashMap<String, TimeKeeper>();
-		extractVideoList();
 	}
 	/**
 	 * @return the id
@@ -187,11 +183,16 @@ public class VideoProject extends JSONObject {
 	 * @return the start time expressed as milliseconds from the project start, ie time 0.
 	 */
 	public long getVideoStartTime(String videoId) {
-		TimeKeeper keeper = videos.get(videoId);
-		if (keeper == null) {
-			throw new RuntimeException("Video " + videoId + "does not exist in project");
+		try {
+			JSONObject allVids = super.getJSONObject(VIDEO_LIST);
+			JSONObject vidTimes = allVids.getJSONObject(videoId);
+			return vidTimes.getLong(START_TIME);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return keeper.getStartTime();
+
+		return -1;
 	}
 	/**
 	 * Gets the end time of a particular video.
@@ -199,35 +200,38 @@ public class VideoProject extends JSONObject {
 	 * @return the end time expressed as milliseconds from the project start, ie time 0.
 	 */
 	public long getVideoEndTime(String videoId) {
-		TimeKeeper keeper = videos.get(videoId);
-		if (keeper == null) {
-			throw new RuntimeException("Video " + videoId + "does not exist in project");
+		try {
+			JSONObject allVids = super.getJSONObject(VIDEO_LIST);
+			JSONObject vidTimes = allVids.getJSONObject(videoId);
+			return vidTimes.getLong(END_TIME);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return keeper.getEndTime();
+
+		return -1;
 	}
 	/**
 	 * Sets the start time of a video
 	 * @param videoId the video id
 	 * @param startTime the new start time
+	 * @throws JSONException 
 	 */
-	public void setVideoStartTime(String videoId, long startTime) {
-		TimeKeeper keeper = videos.get(videoId);
-		if (keeper == null) {
-			throw new RuntimeException("Video " + videoId + "does not exist in project");
-		}
-		keeper.setStartTime(startTime);
+	public void setVideoStartTime(String videoId, long startTime) throws JSONException {
+		JSONObject allVids = super.getJSONObject(VIDEO_LIST);
+		JSONObject vidTimes = allVids.getJSONObject(videoId);
+		vidTimes.put(START_TIME, startTime);
 	}
 	/**
 	 * Sets the end time of the video
 	 * @param videoId the id of the video 
 	 * @param endTime the new end time
+	 * @throws JSONException 
 	 */
-	public void setVideoEndTime(String videoId, long endTime) {
-		TimeKeeper keeper = videos.get(videoId);
-		if (keeper == null) {
-			throw new RuntimeException("Video " + videoId + "does not exist in project");
-		}
-		keeper.setEndTime(endTime);
+	public void setVideoEndTime(String videoId, long endTime) throws JSONException {
+		JSONObject allVids = super.getJSONObject(VIDEO_LIST);
+		JSONObject vidTimes = allVids.getJSONObject(videoId);
+		vidTimes.put(END_TIME, endTime);
 	}
 	/**
 	 * Adds a video to the project
@@ -236,7 +240,17 @@ public class VideoProject extends JSONObject {
 	 * @param endTime the end time of the video
 	 */
 	public void addVideo(String videoId, long startTime, long endTime) {
-		videos.put(videoId, new TimeKeeper(startTime, endTime));
+
+		try {
+			JSONObject allVids = super.getJSONObject(VIDEO_LIST);
+			JSONObject vidTimes = new JSONObject();
+			vidTimes.put(START_TIME, startTime);
+			vidTimes.put(END_TIME, endTime);
+			allVids.put(videoId, vidTimes);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -248,31 +262,7 @@ public class VideoProject extends JSONObject {
 	public void addVideo(String videoId) {
 		addVideo(videoId, -1, -1);
 	}
-
-
-	/**
-	 * @return the videoList
-	 */
-	public void extractVideoList() {
-		try {
-			JSONObject obj = super.getJSONObject(VIDEO_LIST);
-			Iterator<String> iter = obj.keys();
-			while (iter.hasNext()) {
-				String videoName = iter.next();
-				JSONObject times = obj.getJSONObject(videoName);
-				int startTime = times.getInt(START_TIME);
-				int endTime = times.getInt(END_TIME);
-				TimeKeeper keeper = new TimeKeeper(startTime, endTime);
-				videos.put(videoName, keeper);
-			}
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	public String asJsonString() {
 		return super.toString();
 	}
-
 }
