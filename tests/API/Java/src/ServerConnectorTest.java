@@ -14,15 +14,17 @@ import contrivance.rest.model.VideoProject;
 
 public class ServerConnectorTest {
 
-	private static final String HOST = "http://guygrigsby.com:3000";
+	private static final String HOST = "http://localhost:3000";
 	private static final String LOCAL_VID_LOCATION = "../../vids";
 	private static final String LOCAL_SAVE_LOCATION = "../../vids/downloads";
 	
 	private ServerConnector connector;
+	private VideoProject projectData;
 	
 	@Before
 	public void init() {
 		connector = new ServerConnector(HOST);
+		projectData = new VideoProject(getTestValues());
 	}
 
 //	@Test
@@ -76,11 +78,10 @@ public class ServerConnectorTest {
 	@Test
 	public void uploadProjectDataTest() {
 		Map<String, Object> values = getTestValues();
-		VideoProject projectData;
 		try {
-			projectData = new VideoProject(values);
+			System.out.println(projectData.asJsonString());
 			String res = connector.uploadProjectData(projectData);
-			//System.out.println(res);
+			System.out.println(res);
 		} catch (JSONException e) {
 			fail(e.getLocalizedMessage());
 		} catch (ClientProtocolException e) {

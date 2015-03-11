@@ -8,13 +8,15 @@ import java.nio.file.Paths;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,11 +54,11 @@ public class ServerConnector {
 		ul.executeRequest();
 	}
 	
-	public String downloadProjectData(String projectId) throws ClientProtocolException, IOException, JSONException {
+	public VideoProject downloadProjectData(String projectId) throws ClientProtocolException, IOException, JSONException {
 		HttpGet get = new HttpGet(String.format("%s%s/%s", host,
 				GET_PROJECT_DATA, projectId));
 		String responseString = executeMethodWithJSONResponse(get);
-		return responseString;
+		return new VideoProject(responseString);
 		
 	}
 	
@@ -70,8 +72,8 @@ public class ServerConnector {
 	}
 	
 	public String uploadProjectData(VideoProject projectData) throws ClientProtocolException, IOException, JSONException {
-		HttpPost post = new HttpPost(String.format("%s%s/%s", host,
-				POST_PROJECT_DATA, projectData.getId()));
+		HttpPost post = new HttpPost(String.format("%s%s", host,
+				POST_PROJECT_DATA));
 		StringEntity entity = new StringEntity(projectData.asJsonString(), ContentType.create("application/json"));
 		post.setEntity(entity);
 		String responseString = executeMethodWithJSONResponse(post);
@@ -89,14 +91,21 @@ public class ServerConnector {
 	}
 	
 	private String executeMethodWithJSONResponse(HttpUriRequest request) throws ClientProtocolException, IOException {
-		HttpClient httpclient = HttpClientBuilder.create().build();
-		HttpResponse response = httpclient.execute(request);
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
 		StringBuffer result = new StringBuffer();
-		String line = "";
-		while ((line = rd.readLine()) != null) {
-		    result.append(line);
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		CloseableHttpResponse response = httpclient.execute(request);
+		try {
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+	
+			
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+			    result.append(line);
+			}
+			EntityUtils.consume(response.getEntity());
+		} finally {
+			response.close();
+			httpclient.close();
 		}
 
 		return result.toString();
