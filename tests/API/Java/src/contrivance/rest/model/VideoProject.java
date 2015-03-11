@@ -1,5 +1,8 @@
 package contrivance.rest.model;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 /*
@@ -36,6 +39,23 @@ public class VideoProject extends JSONObject {
 	 */
 	public VideoProject(String jsonInput) throws JSONException {
 		super(jsonInput);
+	}
+	
+	public VideoProject(Map<String, Object> map) throws JSONException {
+		super();
+		long createdAt = System.currentTimeMillis();
+		Iterator<Map.Entry<String, Object>> it = map.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, Object> pairs = it.next();
+		    this.put(pairs.getKey(), pairs.getValue() );
+		}
+		if (this.opt(CREATED_AT) == null) {
+			this.put(CREATED_AT, createdAt);
+		}
+		if (this.opt(VIDEO_LIST) == null) {
+			this.put(VIDEO_LIST, new JSONObject());
+		}
+		
 	}
 	
 	/**
