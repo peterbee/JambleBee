@@ -279,6 +279,13 @@ public class VideoProject extends JSONObject {
 		addVideo(videoId, -1, -1);
 	}
 	public String asJsonString() {
-		return super.toString();
+		JSONObject wrapper = new JSONObject();
+		try {
+			wrapper.put("projectData", this);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return wrapper.toString();
 	}
 }
