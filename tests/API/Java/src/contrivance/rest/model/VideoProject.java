@@ -1,9 +1,5 @@
 package contrivance.rest.model;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 /*
@@ -25,7 +21,7 @@ public class VideoProject extends JSONObject {
 	public static final String END_TIME = "endtime";
 	
 	/**
-	 * Create a new video project
+	 * Create a new video project from existing project data
 	 * 
 	 * @param jsonInput the JSON formatted {@code String} conforming to the following format
 	 * 	- id
@@ -41,17 +37,12 @@ public class VideoProject extends JSONObject {
 	public VideoProject(String jsonInput) throws JSONException {
 		super(jsonInput);
 	}
+	
 	/**
-	 * @return the id
+	 * @return the id or {@code null} if none exists
 	 */
 	public String getId() {
-		try {
-			return super.getString(ID);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return super.optString(ID);
 	}
 
 
@@ -59,22 +50,20 @@ public class VideoProject extends JSONObject {
 	 * @param id the id to set
 	 * @throws JSONException 
 	 */
-	public void setId(String id) throws JSONException {
-		super.put(ID, id);
+	public void setId(String id) {
+		try {
+			super.put(ID, id);
+		} catch (JSONException e) {
+			//the key is not null so this will not be thrown
+		}
 	}
 
 
 	/**
-	 * @return the name
+	 * @return the name or {@code null} if none exists
 	 */
 	public String getName() {
-		try {
-			return super.getString(NAME);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return super.optString(NAME);
 	}
 
 
@@ -82,22 +71,20 @@ public class VideoProject extends JSONObject {
 	 * @param name the name to set
 	 * @throws JSONException 
 	 */
-	public void setName(String name) throws JSONException {
-		super.put(NAME, name);
+	public void setName(String name) {
+		try {
+			super.put(NAME, name);
+		} catch (JSONException e) {
+			//the key is not null so this will not be thrown
+		}
 	}
 
 
 	/**
-	 * @return the owner
+	 * @return the owner or {@code null} if none exists
 	 */
 	public String getOwner() {
-		try {
-			return super.getString(OWNER);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return super.optString(OWNER);
 	}
 
 
@@ -105,22 +92,20 @@ public class VideoProject extends JSONObject {
 	 * @param owner the owner to set
 	 * @throws JSONException 
 	 */
-	public void setOwner(String owner) throws JSONException {
-		super.put(OWNER, owner);
+	public void setOwner(String owner) {
+		try {
+			super.put(OWNER, owner);
+		} catch (JSONException e) {
+			//the key is not null so this will not be thrown
+		}
 	}
 
 
 	/**
-	 * @return the createdAt
+	 * @return the createdAt or {@code null} if none exists
 	 */
 	public String getCreatedAt() {
-		try {
-			return super.getString(CREATED_AT);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return super.optString(CREATED_AT);
 	}
 
 
@@ -128,22 +113,20 @@ public class VideoProject extends JSONObject {
 	 * @param createdAt the createdAt to set
 	 * @throws JSONException 
 	 */
-	public void setCreatedAt(String createdAt) throws JSONException {
-		super.put(CREATED_AT, createdAt);
+	public void setCreatedAt(String createdAt) {
+		try {
+			super.put(CREATED_AT, createdAt);
+		} catch (JSONException e) {
+			//the key is not null so this will not be thrown
+		}
 	}
 
 
 	/**
-	 * @return the origId
+	 * @return the origId or {@code null} if none exists
 	 */
 	public String getOrigId() {
-		try {
-			return super.getString(ORIGINAL_VID_ID);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return super.optString(ORIGINAL_VID_ID);
 	}
 
 
@@ -151,22 +134,20 @@ public class VideoProject extends JSONObject {
 	 * @param origId the origId to set
 	 * @throws JSONException 
 	 */
-	public void setOrigId(String origId) throws JSONException {
-		super.put(ORIGINAL_VID_ID, origId);
+	public void setOrigId(String origId) {
+		try {
+			super.put(ORIGINAL_VID_ID, origId);
+		} catch (JSONException e) {
+			//the key is not null so this will not be thrown
+		}
 	}
 
 
 	/**
-	 * @return the parentId
+	 * @return the parentId or {@code null} if none exists
 	 */
 	public String getParentId() {
-		try {
-			return super.getString(PARENT_VID_ID);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return super.optString(PARENT_VID_ID);
 	}
 
 
@@ -174,13 +155,17 @@ public class VideoProject extends JSONObject {
 	 * @param parentId the parentId to set
 	 * @throws JSONException 
 	 */
-	public void setParentId(String parentId) throws JSONException {
-		super.put(PARENT_VID_ID, parentId);
+	public void setParentId(String parentId) {
+		try {
+			super.put(PARENT_VID_ID, parentId);
+		} catch (JSONException e) {
+			//the key is not null so this will not be thrown
+		}
 	}
 	/**
 	 * Gets the start time of a particular video.
 	 * @param videoName the video Id
-	 * @return the start time expressed as milliseconds from the project start, ie time 0.
+	 * @return the start time expressed as milliseconds from the project start or {@code -1} if none exists
 	 */
 	public long getVideoStartTime(String videoId) {
 		try {
@@ -197,7 +182,7 @@ public class VideoProject extends JSONObject {
 	/**
 	 * Gets the end time of a particular video.
 	 * @param videoName the video Id
-	 * @return the end time expressed as milliseconds from the project start, ie time 0.
+	 * @return the end time expressed as milliseconds from the project start or {@code -1} if none exists
 	 */
 	public long getVideoEndTime(String videoId) {
 		try {
@@ -217,10 +202,16 @@ public class VideoProject extends JSONObject {
 	 * @param startTime the new start time
 	 * @throws JSONException 
 	 */
-	public void setVideoStartTime(String videoId, long startTime) throws JSONException {
-		JSONObject allVids = super.getJSONObject(VIDEO_LIST);
-		JSONObject vidTimes = allVids.getJSONObject(videoId);
-		vidTimes.put(START_TIME, startTime);
+	public void setVideoStartTime(String videoId, long startTime) {
+		JSONObject allVids;
+		try {
+			allVids = super.getJSONObject(VIDEO_LIST);
+			JSONObject vidTimes = allVids.getJSONObject(videoId);
+			vidTimes.put(START_TIME, startTime);
+		} catch (JSONException e) {
+			//All fields are required so this should not happen
+		}
+
 	}
 	/**
 	 * Sets the end time of the video
@@ -228,10 +219,15 @@ public class VideoProject extends JSONObject {
 	 * @param endTime the new end time
 	 * @throws JSONException 
 	 */
-	public void setVideoEndTime(String videoId, long endTime) throws JSONException {
-		JSONObject allVids = super.getJSONObject(VIDEO_LIST);
-		JSONObject vidTimes = allVids.getJSONObject(videoId);
-		vidTimes.put(END_TIME, endTime);
+	public void setVideoEndTime(String videoId, long endTime) {
+		JSONObject allVids;
+		try {
+			allVids = super.getJSONObject(VIDEO_LIST);
+			JSONObject vidTimes = allVids.getJSONObject(videoId);
+			vidTimes.put(END_TIME, endTime);
+		} catch (JSONException e) {
+			//All fields are required so this should not happen
+		}
 	}
 	/**
 	 * Adds a video to the project
