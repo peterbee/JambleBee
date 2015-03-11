@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -20,10 +19,10 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import contrivance.rest.model.ProjectData;
 import contrivance.rest.model.VideoData;
-import contrivance.rest.model.VideoProject;
 
-public class ServerConnector {
+public class ServerConnector implements JambleHostConnector {
 
 	private static final String GET_PROJECT_DATA = "/data/get_project";
 	private static final String GET_VIDEO_DATA = "/data/get_video";
@@ -38,40 +37,56 @@ public class ServerConnector {
 	public ServerConnector(String hostName) {
 		host = hostName;
 	}
-
+	/* (non-Javadoc)
+	 * @see contrivance.rest.JambleHostConnector#downloadVideo(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public String downloadVideo(String saveLocation,
-			String videoName) throws ClientProtocolException, IOException {
-		Download dl = new VideoDownload(host, videoName);
+			String videoId) throws IOException {
+		Download dl = new VideoDownload(host, videoId);
 		HttpResponse response = dl.executeRequest();
 		dl.saveFile(response, saveLocation);
 		return saveLocation;
 	}
-
-	public void uploadVideo(String fileName) throws ClientProtocolException,
-			IOException {
+	/* (non-Javadoc)
+	 * @see contrivance.rest.JambleHostConnector#uploadVideo(java.lang.String)
+	 */
+	@Override
+	public void uploadVideo(String fileName) throws IOException {
 		Path filePath = Paths.get(fileName);
 		Upload ul = new VideoUpload(host, filePath);
 		ul.executeRequest();
 	}
-	
-	public VideoProject downloadProjectData(String projectId) throws ClientProtocolException, IOException, JSONException {
+	/* (non-Javadoc)
+	 * @see contrivance.rest.JambleHostConnector#downloadProjectData(java.lang.String)
+	 */
+	@Override
+	public ProjectData downloadProjectData(String projectId) throws IOException, JSONException {
 		HttpGet get = new HttpGet(String.format("%s%s/%s", host,
 				GET_PROJECT_DATA, projectId));
 		String responseString = executeMethodWithJSONResponse(get);
-		return new VideoProject(responseString.substring(1, responseString.length()-1));
+		String json = removeObjectFromArray(responseString);
+		return new ProjectData(json);
 		
 	}
-	
-	public VideoData downloadVideoData(String videoId) throws ClientProtocolException, IOException, JSONException {
+	/* (non-Javadoc)
+	 * @see contrivance.rest.JambleHostConnector#downloadVideoData(java.lang.String)
+	 */
+	@Override
+	public VideoData downloadVideoData(String videoId) throws IOException, JSONException {
 		HttpGet get = new HttpGet(String.format("%s%s/%s", host,
 				GET_VIDEO_DATA, videoId));
 		String responseString = executeMethodWithJSONResponse(get);
-		return new VideoData(responseString);
+		String json = removeObjectFromArray(responseString);
+		return new VideoData(json);
 
 		
 	}
-	
-	public String uploadProjectData(VideoProject projectData) throws ClientProtocolException, IOException, JSONException {
+	/* (non-Javadoc)
+	 * @see contrivance.rest.JambleHostConnector#uploadProjectData(contrivance.rest.model.ProjectData)
+	 */
+	@Override
+	public String uploadProjectData(ProjectData projectData) throws IOException, JSONException {
 		HttpPost post = new HttpPost(String.format("%s%s", host,
 				POST_PROJECT_DATA));
 		StringEntity entity = new StringEntity(projectData.asJsonString(), ContentType.create("application/json"));
@@ -80,7 +95,11 @@ public class ServerConnector {
 		return responseString;
 		
 	}
-	public JSONObject uploadVideoData(VideoData videoData) throws ClientProtocolException, IOException, JSONException {
+	/* (non-Javadoc)
+	 * @see contrivance.rest.JambleHostConnector#uploadVideoData(contrivance.rest.model.VideoData)
+	 */
+	@Override
+	public JSONObject uploadVideoData(VideoData videoData) throws IOException, JSONException {
 		HttpPost post = new HttpPost(String.format("%s%s/%s", host,
 				POST_VIDEO_DATA, videoData.getId()));
 		StringEntity entity = new StringEntity(videoData.asJsonString(), ContentType.create("application/json"));
@@ -89,8 +108,14 @@ public class ServerConnector {
 		return new JSONObject(responseString);
 		
 	}
-	
-	private String executeMethodWithJSONResponse(HttpUriRequest request) throws ClientProtocolException, IOException {
+	/**
+	 * Internal method for executing a {@code HttpUriRequest}
+	 * @param request the request to be executed
+	 * @return the server response
+	 * @throws IOException if the server cannot be reached
+	 * @throws JSONException if the server sends back data in an invalid format
+	 */
+	private String executeMethodWithJSONResponse(HttpUriRequest request) throws IOException {
 		StringBuffer result = new StringBuffer();
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		CloseableHttpResponse response = httpclient.execute(request);
@@ -107,8 +132,16 @@ public class ServerConnector {
 			response.close();
 			httpclient.close();
 		}
-
-		return result.toString();
+		String res = result.toString();
+		return res;
+	}
+	/**
+	 * Currently the server responds with an JSON object wrapped in a JSON array. We need to strip the array.
+	 * @param array
+	 * @return
+	 */
+	private String removeObjectFromArray(String array) {
+		return array.substring(1, array.length()-1);
 	}
 
 }
