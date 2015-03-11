@@ -1,7 +1,8 @@
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
@@ -19,12 +20,10 @@ public class ServerConnectorTest {
 	private static final String LOCAL_SAVE_LOCATION = "../../vids/downloads";
 	
 	private ServerConnector connector;
-	private VideoProject projectData;
 	
 	@Before
 	public void init() {
 		connector = new ServerConnector(HOST);
-		projectData = new VideoProject(getTestValues());
 	}
 
 //	@Test
@@ -76,28 +75,26 @@ public class ServerConnectorTest {
 //	}
 	
 	@Test
-	public void uploadProjectDataTest() {
-		Map<String, Object> values = getTestValues();
-		try {
-			System.out.println(projectData.asJsonString());
-			String res = connector.uploadProjectData(projectData);
-			System.out.println(res);
-		} catch (JSONException e) {
-			fail(e.getLocalizedMessage());
-		} catch (ClientProtocolException e) {
-			fail(e.getLocalizedMessage());
-		} catch (IOException e) {
-			fail(e.getLocalizedMessage());
-		}
-	}
-	
-	@Test
-	public void downloadProjectDataTest() {
+	public void uploadDownloadProjectDataTest() {
 
 		try {
-			String id = "TestID";
-			String res = connector.downloadProjectData(id);
-			System.out.println(res);
+			VideoProject projectData = new VideoProject(getTestValues());
+			String res = connector.uploadProjectData(projectData);
+			System.out.println("UPLOAD RESPONSE = "+res);
+			
+			String id = projectData.getId();
+			VideoProject downloadedProject = connector.downloadProjectData(id);
+			
+			Iterator<String> iter = projectData.keys();
+			while (iter.hasNext()) {
+				String key = iter.next();
+				if (key.equals(VideoProject.CREATED_AT)) {
+					continue;
+				}
+				String downloaded = downloadedProject.optString(key);
+				String correct = projectData.optString(key);
+				assertEquals(correct, downloaded);
+			}
 		} catch (JSONException e) {
 			fail(e.getLocalizedMessage());
 		} catch (ClientProtocolException e) {
@@ -109,7 +106,7 @@ public class ServerConnectorTest {
 	
 	private Map<String, Object> getTestValues() {
 		Map<String, Object> values = new HashMap<String, Object>();
-		values.put(VideoProject.ID, "TestID");
+		values.put(VideoProject.ID, "" + System.currentTimeMillis());
 		values.put(VideoProject.NAME, "TestName");
 		values.put(VideoProject.OWNER, "TestOwner");
 		values.put(VideoProject.ORIGINAL_VID_ID, "TestOriginalID");

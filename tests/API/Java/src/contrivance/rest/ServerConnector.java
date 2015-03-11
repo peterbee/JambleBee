@@ -58,7 +58,7 @@ public class ServerConnector {
 		HttpGet get = new HttpGet(String.format("%s%s/%s", host,
 				GET_PROJECT_DATA, projectId));
 		String responseString = executeMethodWithJSONResponse(get);
-		return new VideoProject(responseString);
+		return new VideoProject(responseString.substring(1, responseString.length()-1));
 		
 	}
 	
