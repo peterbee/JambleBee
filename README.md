@@ -29,8 +29,7 @@ Android Base Project
 --------------------
 Jamblebee
 
-Android Prototype Projects
---------------------------
+| ## Android Prototype Projects |         |                 |                  |
 | :------------------------: | :--------: | :-------------: | :--------------: |
 |CameraTest                  |Jamstagram  |LoadVideos       | MultipleActivies |
 |TestMultipleActivities2     |VideoPlayer |VideoProjectModel| EditView         |
