@@ -42,7 +42,7 @@ Jamblebee
 Server Side
 ===========
 
-For server side development see:
+For server side development information see:
 
 ```
 server/README.md
