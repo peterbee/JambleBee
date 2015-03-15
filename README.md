@@ -28,14 +28,6 @@ Android Development Requirements
 
 For Server Requiremetns see "server/README.md"
 
----
-
-History (Prototypes)
-===================
-Build many prototypes to assist in the development of this product and start an
-Android Base Project. There is a server component which will be used to store
-video project meta data and video data, .mp4 files.
-
 Android Base Project
 --------------------
 Jamblebee
@@ -45,9 +37,16 @@ Jamblebee
 |CameraTest                  |Jamstagram  |LoadVideos       | MultipleActivies |
 |TestMultipleActivities2     |VideoPlayer |VideoProjectModel| EditView         |
 
+---
+
 Server Side
------------
-For server information see the "server/README.md".
+===========
+
+For server side development see:
+
+```
+server/README.md
+```
 
 Server Side Tests
 -----------------
@@ -68,5 +67,13 @@ All dependencies are contained in the following directory.
 ```
 test/API/Java/lib/
 ```
+
+---
+
+History (Prototypes)
+===================
+Build many prototypes to assist in the development of this product and start an
+Android Base Project. There is a server component which will be used to store
+video project meta data and video data, .mp4 files.
 
 ---
