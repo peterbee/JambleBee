@@ -30,9 +30,11 @@ For Server Requiremetns see "server/README.md"
 
 Android Base Project
 --------------------
-Jamblebee
+* Jamblebee
 
-| Android Prototype Projects |            |                 |                  |
+Android Prototype Projects
+--------------------------
+|                            |            |                 |                  |
 | :------------------------: | :--------: | :-------------: | :--------------: |
 |CameraTest                  |Jamstagram  |LoadVideos       | MultipleActivies |
 |TestMultipleActivities2     |VideoPlayer |VideoProjectModel| EditView         |
