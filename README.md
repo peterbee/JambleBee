@@ -72,9 +72,10 @@ test/API/Java/lib/
 
 ---
 
-History (Prototypes)
-===================
+Current Release (Prototypes)
+============================
 ---
-Build many prototypes to assist in the development of this product and start an
-Android Base Project. There is a server component which will be used to store
-video project meta data and video data, .mp4 files.
+* Build many prototypes to assist in the development of this product and start
+an Android Base Project.
+* Develop the server component that will be used to store video project meta
+data and video data, .mp4 files.
