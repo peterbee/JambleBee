@@ -1,5 +1,6 @@
 Project Jamblebee
 =================
+---
 
 The Vision
 ----------
@@ -14,10 +15,10 @@ This is the repository for Team Contrivance and project Jamblebee, which is a
 multi-platform application currently being developed in Android with a server
 component.
 
----
-
 Android
 =======
+---
+
 All android applications are build with android studio, the official Android
 development environment.
 
@@ -43,6 +44,7 @@ Android Prototype Projects
 
 Server Side
 ===========
+---
 
 For server side development information see:
 
@@ -74,8 +76,7 @@ test/API/Java/lib/
 
 History (Prototypes)
 ===================
+---
 Build many prototypes to assist in the development of this product and start an
 Android Base Project. There is a server component which will be used to store
 video project meta data and video data, .mp4 files.
-
----
