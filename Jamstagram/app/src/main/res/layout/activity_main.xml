@@ -53,7 +53,7 @@
 
         <VideoView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/video"
             android:layout_alignParentBottom="false"
             android:layout_alignParentStart="true"
@@ -64,7 +64,7 @@
 
         <TextureView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/surface_view"
             android:layout_weight="1" />
 
