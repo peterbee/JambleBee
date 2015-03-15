@@ -13,8 +13,8 @@ component.
 
 Android
 -------
-All android applications are build with android studio, the offical Android
-development enviorment.
+All android applications are build with android studio, the official Android
+development environment.
 
 * Android Studio 1.1.0
 
