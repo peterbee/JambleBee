@@ -40,8 +40,6 @@ Android Prototype Projects
 |CameraTest                  |Jamstagram  |LoadVideos       | MultipleActivies |
 |TestMultipleActivities2     |VideoPlayer |VideoProjectModel| EditView         |
 
----
-
 Server Side
 ===========
 ---
