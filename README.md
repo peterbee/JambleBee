@@ -8,12 +8,12 @@ help bring a togetherness between cultures.
 Repository Description
 ----------------------
 This is the repository for Team Contrivance and project Jamblebee, which is a
-multi-platform application currently being developed in Android and IOS, with a
-server component.
+multi-platform application currently being developed in Android with a server
+component.
 
 Android
 -------
-All android applications are build with android studio, th offical Android
+All android applications are build with android studio, the offical Android
 development enviorment.
 
 * Android Studio 1.1.0
@@ -23,25 +23,25 @@ development enviorment.
 History (Prototypes)
 ===================
 Build many prototypes to assist in the development of this product and start an
-Android Base Project
+Android Base Project. There is a server component wich will be used to store
+video project meta data and video data, .mp4 files.
 
 Android Base Project
 --------------------
 Jamblebee
 
-| ## Android Prototype Projects |         |                 |                  |
+| Android Prototype Projects |            |                 |                  |
 | :------------------------: | :--------: | :-------------: | :--------------: |
 |CameraTest                  |Jamstagram  |LoadVideos       | MultipleActivies |
 |TestMultipleActivities2     |VideoPlayer |VideoProjectModel| EditView         |
 
-IOS Project
+Server Side
 -----------
+For server information see the "server" directory readme.
 
-
-Server
-------
-
-Java Data Model
----------------
+Server Side Tests
+-----------------
+See "test" directory, which contains test video data for the server, and test
+developed both in java and java script.
 
 ---
