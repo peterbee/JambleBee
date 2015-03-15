@@ -70,8 +70,6 @@ All dependencies are contained in the following directory.
 test/API/Java/lib/
 ```
 
----
-
 Current Release (Prototypes)
 ============================
 ---
