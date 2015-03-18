@@ -9,17 +9,25 @@ import java.io.File;
  * Makes it convenient to store this data in an ArrayList
  */
 public class VideoFile {
-
-    int time;      // Time (in miliseconds) of every user action while in record mode
+    int startTime;
+    int endTime;      // Time (in miliseconds) of every user action while in record mode
     String path;   // Path to the selected video
 
-    public VideoFile (int t, String p) {
-        time = t;
+    public VideoFile (int start, String p) {
+        startTime = start;
         path = p;
     }
 
-    public int getTime() {
-        return time;
+    public void setEndTime(int time) {
+        endTime = time;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
     }
 
     public String getPath() {
