@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -36,9 +38,7 @@ public class MainActivity extends Activity {
     String UUID;                // Devices Unique Identifier
     VideoView videoView;        // THE VIDEO VIEW! =)
     boolean recording;          // True if recording, False if not recording
-    int timeCheck;              // Variable used for checking if vid should switch yet
-    int time;                   // Variable for storing time at each user interaction
-    int count;                  // Variable for moving on to the next video after a switch in play
+    int playingVideoNumber;      // Variable for moving on to the next video after a switch in play
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +50,6 @@ public class MainActivity extends Activity {
         playButton = (Button) findViewById(R.id.playButton);
         videoView = (VideoView) findViewById(R.id.videoView);
         recording = false;
-        time = 0;
-        count = 0;
 
         // Gets the UUID (Unique Device ID) for storing video files.
         UUID = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
@@ -66,10 +64,10 @@ public class MainActivity extends Activity {
         videoView.setMediaController(mc);
 
         // Setting current project location
-        vidsLoc = "/sdcard/storage/";
+        //vidsLoc = "/sdcard/storage/";
 
         // This location may be better for you...
-        //vidsLoc = "/sdcard/DCIM/camera/";
+        vidsLoc = "/sdcard/DCIM/camera/";
 
         // files is an ArrayList containing File objects
         files = new ArrayList<File>();
@@ -93,31 +91,24 @@ public class MainActivity extends Activity {
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, files);
         gridView.setAdapter(adapter);
 
+
         // This is what happens every time an item is selected in the gridview
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-                if (videoView.isPlaying())
-                    time = videoView.getCurrentPosition();
-
-                setUpVideo(position);
-
-                if (recording) {
+                if (videoView.isPlaying() && recording) {
+                    final int time = videoView.getCurrentPosition();
                     videoView.seekTo(time);
                     times.add(new VideoFile(time, files.get(position).getAbsolutePath()));
+                    // Apparently we need to request focus to setUp the listener allowing seekTo()
+                    videoView.requestFocus();
+                    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        public void onPrepared(MediaPlayer mp) {
+                            videoView.seekTo(time);
+                        }
+                    });
+                    setUpVideo(position);
+                    videoView.start();
                 }
-
-                // Apparently we need to request focus to setUp the listener allowing seekTo()
-                videoView.requestFocus();
-                videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    public void onPrepared(MediaPlayer mp){
-                        videoView.seekTo(time);
-                        videoView.start();
-                    }
-                });
-
-
-                videoView.start();
-
             }
         });
 
@@ -138,16 +129,23 @@ public class MainActivity extends Activity {
         // I need help here
         final Runnable r = new Runnable() {
             public void run() {
-                timeCheck = videoView.getCurrentPosition();
+                int currentTime = videoView.getCurrentPosition();
+                int switchTime = times.get(playingVideoNumber).getTime();
+                Log.i("", "current time = "+currentTime);
+                Log.i("", "switch time = "+switchTime);
+                if (currentTime >= switchTime) {
+                    if (playingVideoNumber < times.size()) {
+                        videoView.requestFocus();
+                        videoView.seekTo(times.get(playingVideoNumber).getTime());
+                        setUpVideo(times.get(playingVideoNumber).getPath());
+                        videoView.start();
+                        playingVideoNumber++;
+                    }
 
-                if (timeCheck > times.get(count).getTime()) {
-                    setUpVideo(count);
-                    videoView.seekTo(times.get(count).getTime());
-                    videoView.start();
-                    if (count < times.size()-1)
-                      count++; // count is only increased if the video has switched
                 }
-                handler.postDelayed(this, 100);
+                if (playingVideoNumber < times.size()) {
+                    handler.postDelayed(this, 100);
+                }
             }
         };
 
@@ -156,8 +154,14 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!recording && times.size() > 0) {
-                    count = 0;
-                    setUpVideo(count);
+                    playingVideoNumber = 0;
+                    setUpVideo(0);
+                    videoView.requestFocus();
+                    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        public void onPrepared(MediaPlayer mp){
+                            videoView.seekTo(0);
+                        }
+                    });
                     handler.postDelayed(r, 100);
                     videoView.start();
       //              playSounds();
@@ -169,13 +173,16 @@ public class MainActivity extends Activity {
 
 ////////////////////////////////////////END HELP////////////////////////////////////////////////////
 
-
     // Method that is used throughout application to load a new video to the videoview
     // viewView.start() must be called after this running this method to actually start it
     private void setUpVideo(int i) {
+        videoView.stopPlayback();
         String vidLoc = files.get(i).getAbsolutePath();
-        Uri uri = Uri.parse(vidLoc);
-        videoView.setVideoURI(uri);
+        videoView.setVideoPath(vidLoc);
+    }
+    private void setUpVideo(String path) {
+        videoView.stopPlayback();
+        videoView.setVideoPath(path);
     }
 
 
