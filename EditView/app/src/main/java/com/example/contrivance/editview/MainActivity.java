@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
-    public static final String VIDEOS_LOCATION = "/sdcard/DCIM/camera/";//or "/sdcard/storage/";
+    public static final String VIDEOS_LOCATION = "/sdcard/DCIM/Camera/";//or "/sdcard/storage/";
 
     ArrayList<File> files;      // For storing all the files in a project
     ArrayList<VideoFile> videos; // For storing user interactions
@@ -179,7 +179,7 @@ public class MainActivity extends Activity {
                     });
                     handler.postDelayed(r, 100);
                     videoView.start();
-      //              playSounds();
+                    playSounds();
                 } else {
                     showInstructionToast();
                 }
@@ -225,7 +225,7 @@ public class MainActivity extends Activity {
         setUpVideo(position);
         videos.add(new VideoFile(0, files.get(position).getAbsolutePath()));
        videoView.start();
-    //   playSounds();
+       playSounds();
     }
 
     // The current way we are playing sounds from video files - This is our lag issue.
