@@ -72,7 +72,8 @@ exports.postVideoInfo = function(req,res){
             res.json(err)
         }
         else {
-            res.json(result)
+            console.log("succeed")
+            res.json({status : "succeed"})
         }
     })
 
