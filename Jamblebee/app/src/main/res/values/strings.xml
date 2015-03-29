@@ -15,4 +15,7 @@
 
     <!-- Video Project Editor View Strings-->
     <string name="action_editor">Project Editor</string>
+    <string name="title_activity_djview">DJView</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

@@ -1,4 +1,4 @@
-package view.msudevner.jamblebee;
+package edu.msudenver.jamblebee.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -26,7 +26,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 
-import controller.msudenver.jamblebee.CameraHelper;
+import edu.msudenver.jamblebee.controller.CameraHelper;
+import view.msudevner.jamblebee.R;
 
 public class Record extends Activity {
 

@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="view.msudevner.jamblebee.VideoProjectEditor">
+    tools:context="edu.msudenver.jamblebee.view.VideoProjectEditor">
 
     <item
         android:id="@+id/menu_action_main"

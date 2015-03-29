@@ -1,4 +1,4 @@
-package view.msudevner.jamblebee;
+package edu.msudenver.jamblebee.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -30,6 +30,8 @@ import android.widget.Button;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import view.msudevner.jamblebee.R;
 
 public class VideoProjectEditor extends Activity {
 
