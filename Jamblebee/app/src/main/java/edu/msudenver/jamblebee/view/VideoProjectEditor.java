@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import view.msudevner.jamblebee.R;
+import edu.msudevner.jamblebee.R;
 
 public class VideoProjectEditor extends Activity {
     public static final String VIDEOS_LOCATION = "/sdcard/DCIM/Camera/";//or "/sdcard/storage/";

@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.List;
 
 import edu.msudenver.jamblebee.controller.CameraHelper;
-import view.msudevner.jamblebee.R;
+import edu.msudevner.jamblebee.R;
 
 public class Record extends Activity {
 

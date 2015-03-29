@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import view.msudevner.jamblebee.R;
+import edu.msudevner.jamblebee.R;
 
 public class VideoArrayAdapter extends ArrayAdapter<String>{
     Context context;
