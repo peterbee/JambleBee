@@ -1,4 +1,4 @@
-package view.msudevner.jamblebee.edu.msudenver.jamblebee.view;
+package edu.msudenver.jamblebee.view;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
