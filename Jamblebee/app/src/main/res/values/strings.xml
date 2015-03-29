@@ -14,5 +14,6 @@
 
 
     <!-- Video Project Editor View Strings-->
-    <string name="action_editor">Project Editor</string>
+    <string name="action_editor">DJ View</string>
+
 </resources>

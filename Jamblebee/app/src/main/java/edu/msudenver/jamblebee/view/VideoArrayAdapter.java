@@ -1,4 +1,4 @@
-package view.msudevner.jamblebee;
+package edu.msudenver.jamblebee.view;
 
 import android.content.Context;
 import android.media.ThumbnailUtils;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import edu.msudevner.jamblebee.R;
 
 public class VideoArrayAdapter extends ArrayAdapter<String>{
     Context context;

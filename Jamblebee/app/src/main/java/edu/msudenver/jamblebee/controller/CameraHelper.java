@@ -1,4 +1,4 @@
-package controller.msudenver.jamblebee;
+package edu.msudenver.jamblebee.controller;
 
 import android.annotation.TargetApi;
 import android.hardware.Camera;

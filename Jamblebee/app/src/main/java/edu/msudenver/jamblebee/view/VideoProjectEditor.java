@@ -1,7 +1,9 @@
-package com.example.contrivance.editview;
+package edu.msudenver.jamblebee.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.ComposePathEffect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -27,8 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends Activity {
+import edu.msudevner.jamblebee.R;
 
+public class VideoProjectEditor extends Activity {
     public static final String VIDEOS_LOCATION = "/sdcard/DCIM/Camera/";//or "/sdcard/storage/";
 
     ArrayList<File> files;      // For storing all the files in a project
@@ -61,7 +64,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_video_project_editor);
 
         gridView = (GridView) findViewById(R.id.gridView);
         playButton = (Button) findViewById(R.id.playButton);
@@ -221,11 +224,11 @@ public class MainActivity extends Activity {
 
     // Method which starts the recording process
     public void record(int position) {
-       recording = true;
+        recording = true;
         setUpVideo(position);
         videos.add(new VideoFile(0, files.get(position).getAbsolutePath()));
-       videoView.start();
-       playSounds();
+        videoView.start();
+        playSounds();
     }
 
     // The current way we are playing sounds from video files - This is our lag issue.
@@ -283,15 +286,11 @@ public class MainActivity extends Activity {
     };
 
 */
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_video_project_editor, menu);
         return true;
-
-
     }
 
     @Override
@@ -301,16 +300,12 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()) {
+            case R.id.menu_action_main:
+                finish();
+            default:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
 }
