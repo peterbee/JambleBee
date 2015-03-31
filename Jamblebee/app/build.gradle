@@ -20,5 +20,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/fluent-hc-4.4.jar')
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/httpclient-4.4.jar')
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/httpclient-cache-4.4.jar')
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/httpclient-win-4.4.jar')
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/httpcore-4.4.jar')
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/httpmime-4.4.jar')
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/jna-4.1.0.jar')
+    compile files('/home/guy/synchronized-video-collaboration/Jamblebee/libs/jna-platform-4.1.0.jar')
 }

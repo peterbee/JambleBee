@@ -2,40 +2,38 @@ package edu.msudenver.jamblebee.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.ComposePathEffect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.MediaController;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
-import android.provider.Settings.Secure;
-import android.widget.Button;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import edu.msudenver.jamblebee.model.VideoData;
 import edu.msudevner.jamblebee.R;
 
 public class VideoProjectEditor extends Activity {
     public static final String VIDEOS_LOCATION = "/sdcard/DCIM/Camera/";//or "/sdcard/storage/";
 
     ArrayList<File> files;      // For storing all the files in a project
-    ArrayList<VideoFile> videos; // For storing user interactions
+    ArrayList<VideoData> videos; // For storing user interactions
     Button playButton;          // Button that plays back recorded interactions
     GridView gridView;          // For displaying each track in project and record user interaction
     Handler handler;            // For the mid-video call backs - Separate thread that runs timer
@@ -91,7 +89,7 @@ public class VideoProjectEditor extends Activity {
         });
 
         // times is an ArrayList containing the VideoFile objects (user interaction time and path)
-        videos = new ArrayList<VideoFile>();
+        videos = new ArrayList<VideoData>();
 
         // We need this when we want to mute sound of each video played from gridview
         //     videoView.setOnPreparedListener(PreparedListener);
@@ -114,9 +112,9 @@ public class VideoProjectEditor extends Activity {
                 if (videoView.isPlaying() && recording) {
                     final int time = videoView.getCurrentPosition();
                     videoView.seekTo(time);
-                    VideoFile lastVid = videos.get(videos.size()-1);
+                    VideoData lastVid = videos.get(videos.size()-1);
                     lastVid.setEndTime(time);
-                    videos.add(new VideoFile(time, files.get(position).getAbsolutePath()));
+                    videos.add(new VideoData(time, files.get(position).getAbsolutePath()));
                     // Apparently we need to request focus to setUp the listener allowing seekTo()
                     videoView.requestFocus();
                     videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -141,14 +139,14 @@ public class VideoProjectEditor extends Activity {
             @Override
             public void run() {
                 int currentTime = videoView.getCurrentPosition();
-                final VideoFile currentVid = videos.get(playingVideoNumber);
+                final VideoData currentVid = videos.get(playingVideoNumber);
                 int switchTime = currentVid.getEndTime();
                 Log.i("", "current time = "+currentTime);
                 Log.i("", "switch time = "+switchTime);
                 if (currentTime >= switchTime) {
                     if (playingVideoNumber < videos.size() - 1) {
                         videoView.requestFocus();
-                        VideoFile nextVid = videos.get(playingVideoNumber + 1);
+                        VideoData nextVid = videos.get(playingVideoNumber + 1);
                         setUpVideo(nextVid.getPath());
                         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             public void onPrepared(MediaPlayer mp){
@@ -172,7 +170,7 @@ public class VideoProjectEditor extends Activity {
             public void onClick(View v) {
                 if (!recording && videos.size() > 0) {
                     playingVideoNumber = 0;
-                    VideoFile firstVid = videos.get(0);
+                    VideoData firstVid = videos.get(0);
                     setUpVideo(firstVid.getPath());
                     videoView.requestFocus();
                     videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -226,7 +224,7 @@ public class VideoProjectEditor extends Activity {
     public void record(int position) {
         recording = true;
         setUpVideo(position);
-        videos.add(new VideoFile(0, files.get(position).getAbsolutePath()));
+        videos.add(new VideoData(0, files.get(position).getAbsolutePath()));
         videoView.start();
         playSounds();
     }
