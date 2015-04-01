@@ -38,19 +38,19 @@ import edu.msudevner.jamblebee.R;
 
 public class VideoProjectEditor extends Activity {
 
-    public static final String VIDEOS_LOCATION = "/sdcard/storage/";
+    public static final String VIDEOS_LOCATION = "sdcard/DCIM/Camera";// or "/sdcard/storage/";
 
-    ArrayList<VideoThumbnail> files;      // For storing all the files in a project
-    ArrayList<VideoData> videos; // For storing user interactions
-    Button playButton;          // Button that plays back recorded interactions
-    GridView gridView;          // For displaying each track in project and record user interaction
-    Handler handler;            // For the mid-video call backs - Separate thread that runs timer
-    MediaPlayer mediaPlayer;    // The media player
-    MediaController mc;         // The media Controller
-    String UUID;                // Devices Unique Identifier
-    VideoView videoView;        // THE VIDEO VIEW! =)
-    boolean recording;          // True if recording, False if not recording
-    int playingVideoNumber;      // Variable for moving on to the next video after a switch in play
+    ArrayList<VideoThumbnail> files;    // For storing all the files in a project
+    ArrayList<VideoData> videos;        // For storing user interactions
+    Button playButton;                  // Button that plays back recorded interactions
+    GridView gridView;                  // For displaying each track in project and record user interaction
+    Handler handler;                    // For the mid-video call backs - Separate thread that runs timer
+    MediaPlayer mediaPlayer;            // The media player
+    MediaController mc;                 // The media Controller
+    String UUID;                        // Devices Unique Identifier
+    VideoView videoView;                // THE VIDEO VIEW! =)
+    boolean recording;                  // True if recording, False if not recording
+    int playingVideoNumber;             // Variable for moving on to the next video after a switch in play
 
     @Override
     protected void onStart() {
@@ -225,9 +225,6 @@ public class VideoProjectEditor extends Activity {
                     Bitmap thumb = ThumbnailUtils.createVideoThumbnail(child.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
                     VideoThumbnail v = new VideoThumbnail(child, thumb);
                     files.add(v);
-
-
-                    //     thumbs.add(thumb);
                 }
             }
         }
