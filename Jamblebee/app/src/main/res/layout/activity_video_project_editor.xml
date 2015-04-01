@@ -20,22 +20,25 @@
 
         <VideoView
             android:layout_width="fill_parent"
-            android:layout_height="500dp"
+            android:layout_height="400dp"
             android:id="@+id/videoView"
             android:layout_centerHorizontal="true" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="92dp"
             android:weightSum="1">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Play"
                 android:id="@+id/playButton"
-                android:layout_weight="0.10" />
+                android:layout_marginLeft="200dp"
+                android:layout_marginRight="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
         </LinearLayout>
 
         <GridView
