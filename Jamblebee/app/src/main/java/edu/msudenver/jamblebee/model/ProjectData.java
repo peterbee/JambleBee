@@ -1,5 +1,7 @@
 package edu.msudenver.jamblebee.model;
 
+import java.util.Iterator;
+
 /**
  * Created by guy on 3/31/15.
  */
@@ -41,4 +43,6 @@ public interface ProjectData {
     void addVideo(String videoId);
 
     String asJsonString();
+
+    Iterator<?> keys();
 }

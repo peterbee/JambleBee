@@ -1,5 +1,7 @@
 package edu.msudenver.jamblebee.model;
 
+import java.util.Iterator;
+
 /**
  * Created by guy on 3/31/15.
  */
@@ -98,5 +100,11 @@ public class SimpleProjectData implements ProjectData {
     public String asJsonString() {
         return null;
     }
+
+    @Override
+    public Iterator<?> keys() {
+        return null;
+    }
+
 }
 
