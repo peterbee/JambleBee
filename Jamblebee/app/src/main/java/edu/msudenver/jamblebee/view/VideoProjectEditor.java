@@ -2,22 +2,27 @@ package edu.msudenver.jamblebee.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -27,22 +32,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import edu.msudenver.jamblebee.model.VideoData;
+import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
 
-public class VideoProjectEditor extends Activity {
-    public static final String VIDEOS_LOCATION = "/sdcard/DCIM/Camera/";//or "/sdcard/storage/";
 
-    ArrayList<File> files;      // For storing all the files in a project
-    ArrayList<VideoData> videos; // For storing user interactions
-    Button playButton;          // Button that plays back recorded interactions
-    GridView gridView;          // For displaying each track in project and record user interaction
-    Handler handler;            // For the mid-video call backs - Separate thread that runs timer
-    MediaPlayer mediaPlayer;    // The media player
-    MediaController mc;         // The media Controller
-    String UUID;                // Devices Unique Identifier
-    VideoView videoView;        // THE VIDEO VIEW! =)
-    boolean recording;          // True if recording, False if not recording
-    int playingVideoNumber;      // Variable for moving on to the next video after a switch in play
+public class VideoProjectEditor extends Activity {
+
+    public static final String VIDEOS_LOCATION = "sdcard/DCIM/Camera";// or "/sdcard/storage/";
+
+    ArrayList<VideoThumbnail> files;    // For storing all the files in a project
+    ArrayList<VideoData> videos;        // For storing user interactions
+    Button playButton;                  // Button that plays back recorded interactions
+    GridView gridView;                  // For displaying each track in project and record user interaction
+    Handler handler;                    // For the mid-video call backs - Separate thread that runs timer
+    MediaPlayer mediaPlayer;            // The media player
+    MediaController mc;                 // The media Controller
+    String UUID;                        // Devices Unique Identifier
+    VideoView videoView;                // THE VIDEO VIEW! =)
+    boolean recording;                  // True if recording, False if not recording
+    int playingVideoNumber;             // Variable for moving on to the next video after a switch in play
 
     @Override
     protected void onStart() {
@@ -63,6 +71,7 @@ public class VideoProjectEditor extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_project_editor);
+//        setContentView(R.layout.activity_main);
 
         gridView = (GridView) findViewById(R.id.gridView);
         playButton = (Button) findViewById(R.id.playButton);
@@ -101,7 +110,7 @@ public class VideoProjectEditor extends Activity {
         files = getProjectContents(VIDEOS_LOCATION);
 
         // Sets up the ArrayAdapter to translate our files ArrayList into a scrollable gridview
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, files);
+        ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
         gridView.setAdapter(adapter);
 
 
@@ -114,7 +123,7 @@ public class VideoProjectEditor extends Activity {
                     videoView.seekTo(time);
                     VideoData lastVid = videos.get(videos.size()-1);
                     lastVid.setEndTime(time);
-                    videos.add(new VideoData(time, files.get(position).getAbsolutePath()));
+                    videos.add(new VideoData(time, files.get(position).getFile().getAbsolutePath()));
                     // Apparently we need to request focus to setUp the listener allowing seekTo()
                     videoView.requestFocus();
                     videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -129,6 +138,7 @@ public class VideoProjectEditor extends Activity {
                 }
             }
         });
+
 
 /////////////////////////////////////////Help///////////////////////////////////////////////////////
 
@@ -195,7 +205,7 @@ public class VideoProjectEditor extends Activity {
     // viewView.start() must be called after this running this method to actually start it
     private void setUpVideo(int i) {
         videoView.stopPlayback();
-        String vidLoc = files.get(i).getAbsolutePath();
+        String vidLoc = files.get(i).getFile().getAbsolutePath();
         videoView.setVideoPath(vidLoc);
     }
     private void setUpVideo(String path) {
@@ -205,14 +215,16 @@ public class VideoProjectEditor extends Activity {
 
 
     // Method which adds all the .mp4 files to our files ArrayList from the project location
-    private ArrayList<File> getProjectContents(String location) {
+    private ArrayList<VideoThumbnail> getProjectContents(String location) {
         File dir = new File(location);
         File[] directoryListing = dir.listFiles();
-        ArrayList<File> files = new ArrayList<File>();
+        ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
         if (directoryListing != null) {
             for (File child : directoryListing) {
                 if (child.getName().endsWith(".mp4")) {
-                    files.add(child);
+                    Bitmap thumb = ThumbnailUtils.createVideoThumbnail(child.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
+                    VideoThumbnail v = new VideoThumbnail(child, thumb);
+                    files.add(v);
                 }
             }
         }
@@ -224,7 +236,7 @@ public class VideoProjectEditor extends Activity {
     public void record(int position) {
         recording = true;
         setUpVideo(position);
-        videos.add(new VideoData(0, files.get(position).getAbsolutePath()));
+        videos.add(new VideoData(0, files.get(position).getFile().getAbsolutePath()));
         videoView.start();
         playSounds();
     }
@@ -232,7 +244,7 @@ public class VideoProjectEditor extends Activity {
     // The current way we are playing sounds from video files - This is our lag issue.
     private void playSounds() {
         for (int i = 0; i<files.size(); i++) {
-            String vidLoc = files.get(i).getAbsolutePath();
+            String vidLoc = files.get(i).getFile().getAbsolutePath();
             Uri uri = Uri.parse(vidLoc);
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setOnCompletionListener(CompletionListener);
@@ -284,11 +296,15 @@ public class VideoProjectEditor extends Activity {
     };
 
 */
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_video_project_editor, menu);
         return true;
+
+
     }
 
     @Override
@@ -306,4 +322,31 @@ public class VideoProjectEditor extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    private class MyListAdapter extends ArrayAdapter<VideoThumbnail> {
+        public MyListAdapter() {
+            super(VideoProjectEditor.this, R.layout.grid_item, files);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View itemView = convertView;
+            if (itemView == null) {
+                itemView = getLayoutInflater().inflate(R.layout.grid_item, parent, false);
+            }
+
+            VideoThumbnail video = files.get(position);
+            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            imageView.setImageBitmap(video.getThumb());
+
+            return itemView;
+        }
+    }
+
+
+
+
+
 }
