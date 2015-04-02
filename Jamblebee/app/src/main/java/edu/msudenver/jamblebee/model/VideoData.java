@@ -2,10 +2,10 @@ package edu.msudenver.jamblebee.model;
 
 public class VideoData {
 
-    String videoId;
-    int startTime;
-    int endTime;      // Time (in miliseconds) of every user action while in record mode
-    String path;   // Path to the selected video
+    private String videoId;
+    private int startTime;
+    private int endTime;      // Time (in miliseconds) of every user action while in record mode
+    private String path;   // Path to the selected video
 
     public VideoData (String id, int start, String p) {
         videoId = id;

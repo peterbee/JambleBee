@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import edu.msudenver.jamblebee.model.JSONProjectData;
 import edu.msudenver.jamblebee.model.ProjectData;
 import edu.msudenver.jamblebee.model.VideoData;
 
@@ -62,7 +63,7 @@ public class ServerConnector implements JambleHostConnector {
 				GET_PROJECT_DATA, projectId));
 		String responseString = executeMethodWithJSONResponse(get);
 		String json = removeObjectFromArray(responseString);
-		return new ProjectData(json);
+		return new JSONProjectData(json);
 		
 	}
 	/* (non-Javadoc)
