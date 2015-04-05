@@ -403,7 +403,7 @@ public void loadVideo(View v){
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
                 mMediaRecorder.start();
-                video.start();
+              // video.start();
                 video.requestFocus();
                 vidLoc = null;
                 isRecording = true;
