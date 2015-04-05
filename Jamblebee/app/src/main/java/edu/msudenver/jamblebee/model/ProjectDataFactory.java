@@ -8,7 +8,7 @@ import java.util.List;
 public class ProjectDataFactory {
 
     public ProjectData createNew(List<VideoData> videos) {
-        ProjectData project = new ProjectData();
+        ProjectData project = new JSONProjectData();
         for (VideoData video : videos) {
             project.addVideo(video.getId(), video.getStartTime(), video.getEndTime());
         }
