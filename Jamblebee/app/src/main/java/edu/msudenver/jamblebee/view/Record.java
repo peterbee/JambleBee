@@ -4,19 +4,28 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -24,9 +33,11 @@ import android.widget.VideoView;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.msudenver.jamblebee.controller.CameraHelper;
+import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
 
 public class Record extends Activity {
@@ -35,10 +46,11 @@ public class Record extends Activity {
     Button upload;
     Button editor;
     Button browser;
-    String filePrefix = "sdcard/DCIM/Camera/";
+    String VIDEOS_LOCATION = "sdcard/DCIM/Camera/";
     String vidLoc = null;
     MediaController mediaController;
-    VideoView video;
+    VideoView video; //record video
+    VideoView playBackVideo;
     ListView listView = null;
     AlertDialog alertDialog;
 
@@ -48,23 +60,32 @@ public class Record extends Activity {
     private MediaRecorder mMediaRecorder;
     private boolean isRecording = false;
     private static final String TAG = "Recorder";
-    private Button captureButton;
-    private Button stop;
+    private ImageButton captureButton,play;
+    private ImageButton stop,pausePlay;
+    GridView gridView;                  // For displaying each track in project and record user interaction
+    ArrayList<VideoThumbnail> files;
+    String UUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record_view);
+        setContentView(R.layout.play_record);
         mediaController = new MediaController(this);
 
         upload = (Button) findViewById(R.id.upload);
-        //editor = (Button) findViewById(R.id.editor);
-        // browser = (Button) findViewById(R.id.browser);
-        //Record
         mPreview = (TextureView) findViewById(R.id.surface_view);
-        captureButton = (Button) findViewById(R.id.button_capture);
-        stop = (Button) findViewById(R.id.stop_recording);
+        captureButton = (ImageButton) findViewById(R.id.button_capture);
+        stop = (ImageButton) findViewById(R.id.stop_recording);
+        play = (ImageButton) findViewById(R.id.play_button);
+
+
+        //Hide + disable stop and pause button when start
+        stop.setVisibility(View.INVISIBLE);
         stop.setEnabled(false);
+        pausePlay = (ImageButton) findViewById(R.id.pause_button);
+        pausePlay.setVisibility(View.INVISIBLE);
+        pausePlay.setEnabled(false);
+
     }
 
     @Override
@@ -73,6 +94,24 @@ public class Record extends Activity {
         getMenuInflater().inflate(R.menu.menu_record_view, menu);
         return true;
     }
+
+    // Method which adds all the .mp4 files to our files ArrayList from the project location
+    private ArrayList<VideoThumbnail> getProjectContents(String location) {
+        File dir = new File(location);
+        File[] directoryListing = dir.listFiles();
+        ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
+        if (directoryListing != null) {
+            for (File child : directoryListing) {
+                if (child.getName().endsWith(".mp4")) {
+                    Bitmap thumb = ThumbnailUtils.createVideoThumbnail(child.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
+                    VideoThumbnail v = new VideoThumbnail(child, thumb);
+                    files.add(v);
+                }
+            }
+        }
+        return files;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -90,91 +129,170 @@ public class Record extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onCaptureClick(View view) {
-        if (isRecording) {
-            // BEGIN_INCLUDE(stop_release_media_recorder)
-            switch(view.getId()) {
-                case R.id.stop_recording:
-                    // stop recording and release camera
-                    mMediaRecorder.stop();  // stop the recording
-                    releaseMediaRecorder(); // release the MediaRecorder object
-                    mCamera.lock();         // take camera access back from MediaRecorder
 
-                    // inform the user that recording has stopped
-                    //setCaptureButtonText((String) getResources().getText(R.string.btnDef));
-                    isRecording = false;
-                    releaseCamera();
-                    captureButton.setEnabled(true);
-                    stop.setEnabled(false);
-                    break;
-                default:
-                    break;
-            }
-        }
-        else {
-            // BEGIN_INCLUDE(prepare_start_media_recorder)
-            if (vidLoc != null){
-                //setCaptureButtonText((String) getResources().getText(R.string.btnCapture));
-                switch(view.getId()) {
-                    case R.id.button_capture:
-                        captureButton.setEnabled(false);
-                        stop.setEnabled(true);
-                        break;
-                    default:
-                        break;
-                }
-                new MediaPrepareTask().execute(null, null, null);
-            }
-            else {
-                // show alert that video selected is null .
-                switch (view.getId()) {
-                    case R.id.upload:
-                        loadVideo();
-                        break;
-                    case R.id.button_capture:
-                        break;
-                    default:
-                        break;
-                }
-            }
-            // END_INCLUDE(prepare_start_media_recorder)
-        }
+    public void onCaptureClick(View v){
+        captureButton.setEnabled(false);
+        captureButton.setVisibility(View.INVISIBLE);
+        stop.setEnabled(true);
+        stop.setVisibility(View.VISIBLE);
+        new MediaPrepareTask().execute(null, null, null);
     }
+
+    public void onPauseRecordClick(View v){
+        mMediaRecorder.stop();  // stop the recording
+        releaseMediaRecorder(); // release the MediaRecorder object
+        mCamera.lock();         // take camera access back from MediaRecorder
+
+        // inform the user that recording has stopped
+        //setCaptureButtonText((String) getResources().getText(R.string.btnDef));
+        isRecording = false;
+        releaseCamera();
+        captureButton.setEnabled(true);
+        captureButton.setVisibility(View.VISIBLE);
+        stop.setEnabled(false);
+        stop.setVisibility(View.INVISIBLE);
+    }
+
+    public void onPlayClick(View v){
+        playBackVideo.start();
+        pausePlay.setVisibility(View.VISIBLE);
+        pausePlay.setEnabled(true);
+        play.setVisibility(View.INVISIBLE);
+        play.setEnabled(false);
+    }
+
+    public void onPausePlayClick(View v){
+        playBackVideo.pause();
+        play.setVisibility(View.VISIBLE);
+        play.setEnabled(true);
+        pausePlay.setVisibility(View.INVISIBLE);
+        pausePlay.setEnabled(false);
+    }
+
+    /**Need refactor*/
+//    public void onCaptureClick(View view) {
+//        if (isRecording) {
+//            // BEGIN_INCLUDE(stop_release_media_recorder)
+//            switch(view.getId()) {
+//                case R.id.stop_recording:
+//                    // stop recording and release camera
+//                    mMediaRecorder.stop();  // stop the recording
+//                    releaseMediaRecorder(); // release the MediaRecorder object
+//                    mCamera.lock();         // take camera access back from MediaRecorder
+//
+//                    // inform the user that recording has stopped
+//                    //setCaptureButtonText((String) getResources().getText(R.string.btnDef));
+//                    isRecording = false;
+//                    releaseCamera();
+//                    captureButton.setEnabled(true);
+//                    stop.setEnabled(false);
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//        else {
+//            // BEGIN_INCLUDE(prepare_start_media_recorder)
+//            if (vidLoc != null){
+//                //setCaptureButtonText((String) getResources().getText(R.string.btnCapture));
+//                switch(view.getId()) {
+//                    case R.id.button_capture:
+//                        captureButton.setEnabled(false);
+//                        captureButton.setVisibility(View.INVISIBLE);
+//                        stop.setEnabled(true);
+//                        stop.setVisibility(View.VISIBLE);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                new MediaPrepareTask().execute(null, null, null);
+//            }
+//            else {
+//                // show alert that video selected is null .
+//                switch (view.getId()) {
+//                    case R.id.upload:
+//                        loadVideo();
+//                        break;
+//                    case R.id.button_capture:
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//            // END_INCLUDE(prepare_start_media_recorder)
+//        }
+//    }
+
+
+    /**I copied the code from Sterling to work with this, we will refactor later*/
     //Load a video from an Android local storage into Playback Window
-    public void loadVideo() {
-        File mediaDir = new File(filePrefix);
-        final String[] videosArray = mediaDir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return filename.endsWith(".mp4");
-            }
-        });
-        System.out.println(videosArray.length);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = (View) getLayoutInflater().inflate(R.layout.list_view, null);
-        listView =(ListView) view.findViewById(R.id.list_view_1);
-        listView.setAdapter((new VideoArrayAdapter(this, videosArray)));
-        builder.setTitle("Pick a video").setView(view).setCancelable(true);
+//    public void loadVideo(View v) {
+//        File mediaDir = new File(VIDEOS_LOCATION);
+//        final String[] videosArray = mediaDir.list(new FilenameFilter() {
+//            @Override
+//            public boolean accept(File dir, String filename) {
+//                return filename.endsWith(".mp4");
+//            }
+//        });
+//        System.out.println(videosArray.length);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        View view = (View) getLayoutInflater().inflate(R.layout.list_view, null);
+//        listView =(ListView) view.findViewById(R.id.list_view_1);
+//        listView.setAdapter((new VideoArrayAdapter(this, videosArray)));
+//        builder.setTitle("Pick a video").setView(view).setCancelable(true);
+//
+//        alertDialog = builder.create();
+//        alertDialog.show();
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                vidLoc = VIDEOS_LOCATION + videosArray[(int)id];
+//                video = (VideoView) findViewById(R.id.video);
+//                mediaController.setAnchorView(video);
+//
+//                Uri uri = Uri.parse(vidLoc);
+//                video.setVideoURI(uri);
+//                video.setMediaController(mediaController);
+//
+//                alertDialog.dismiss();
+//            }
+//        });
+//
+//    }
 
-        alertDialog = builder.create();
-        alertDialog.show();
+public void loadVideo(View v){
+    // Gets the UUID (Unique Device ID) for storing video files.
+    UUID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+    files = getProjectContents(VIDEOS_LOCATION);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                vidLoc = filePrefix + videosArray[(int)id];
-                video = (VideoView) findViewById(R.id.video);
-                mediaController.setAnchorView(video);
+    ///gridview work
+    gridView = (GridView) findViewById(R.id.gridView);
+    ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
+    gridView.setAdapter(adapter);
 
-                Uri uri = Uri.parse(vidLoc);
-                video.setVideoURI(uri);
-                video.setMediaController(mediaController);
+    //set default to the first video
+    vidLoc = files.get(0).getFile().getAbsolutePath();
+    playBackVideo = (VideoView) findViewById(R.id.video);
+    mediaController.setAnchorView(playBackVideo);
+    Uri uri = Uri.parse(vidLoc);
+    playBackVideo.setVideoURI(uri);
+    playBackVideo.setMediaController(mediaController);
 
-                alertDialog.dismiss();
-            }
-        });
+    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            vidLoc = files.get(position).getFile().getAbsolutePath();
+            //System.out.println("VIDLOC : "+vidLoc);
 
-    }
+            Uri uri = Uri.parse(vidLoc);
+            playBackVideo.setVideoURI(uri);
+            playBackVideo.setMediaController(mediaController);
+            //alertDialog.dismiss();
+        }
+    });
+}
+    
 
     @Override
     protected void onPause() {
@@ -204,10 +322,6 @@ public class Record extends Activity {
             mCamera.release();
             mCamera = null;
         }
-    }
-
-    private void setCaptureButtonText(String title) {
-        captureButton.setText(title);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -259,7 +373,7 @@ public class Record extends Activity {
         mMediaRecorder.setProfile(profile);
 
         // Step 4: Set output file
-        File temp = CameraHelper.getOutputMediaFile(filePrefix);
+        File temp = CameraHelper.getOutputMediaFile(VIDEOS_LOCATION);
         if (temp == null) {
             return false;
         }
@@ -289,7 +403,7 @@ public class Record extends Activity {
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
                 mMediaRecorder.start();
-                video.start();
+              // video.start();
                 video.requestFocus();
                 vidLoc = null;
                 isRecording = true;
@@ -301,4 +415,25 @@ public class Record extends Activity {
             return true;
         }
     }
+
+    private class MyListAdapter extends ArrayAdapter<VideoThumbnail> {
+        public MyListAdapter() {
+            super(Record.this, R.layout.grid_item, files);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View itemView = convertView;
+            if (itemView == null) {
+                itemView = getLayoutInflater().inflate(R.layout.grid_item, parent, false);
+            }
+
+            VideoThumbnail video = files.get(position);
+            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            imageView.setImageBitmap(video.getThumb());
+
+            return itemView;
+        }
+    }
+
 }
