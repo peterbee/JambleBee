@@ -15,3 +15,6 @@ $ bin/www
 To start and send to the background run the start script
 
 $ ./start.sh.
+
+
+
