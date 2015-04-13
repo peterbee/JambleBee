@@ -56,7 +56,6 @@ public class RecordFragment extends Fragment {
 
     //Class Variables
     View inflatedView;
-    Button upload;
     Button editor;
     Button browser;
     String VIDEOS_LOCATION = "sdcard/DCIM/Camera/";
@@ -127,7 +126,6 @@ public class RecordFragment extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_record, container, false);
         mediaController = new MediaController(getActivity());
 
-        upload = (Button) inflatedView.findViewById(R.id.upload);
         mPreview = (TextureView) inflatedView.findViewById(R.id.surface_view);
         captureButton = (ImageButton) inflatedView.findViewById(R.id.button_capture);
         stop = (ImageButton) inflatedView.findViewById(R.id.stop_recording);
