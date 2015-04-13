@@ -1,21 +1,14 @@
 package edu.msudenver.jamblebee.view;
 
-import android.app.Activity;
-import android.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
 import java.util.Locale;
 
@@ -30,6 +23,7 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
 
     ViewPager mViewPager;
     RecordFragment recordFragment;
+
     DJFragment djFragment;
 
     @Override
@@ -49,6 +43,22 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
     public void loadVideo(View view) {
         recordFragment.loadVideo(view);
 
+    }
+
+    public void onPausePlayClick(View v) {
+        recordFragment.onPausePlayClick(v);
+    }
+
+    public void onPlayClick(View v) {
+        recordFragment.onPlayClick(v);
+    }
+
+    public void onPauseRecordClick(View v) {
+        recordFragment.onPauseRecordClick(v);
+    }
+
+    public void onCaptureClick(View v) {
+        recordFragment.onCaptureClick(v);
     }
 
     @Override

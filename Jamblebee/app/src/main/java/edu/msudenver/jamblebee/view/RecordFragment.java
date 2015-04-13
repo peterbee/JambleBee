@@ -124,7 +124,7 @@ public class RecordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        inflatedView = inflater.inflate(R.layout.fragment_record_fragement, container, false);
+        inflatedView = inflater.inflate(R.layout.fragment_record, container, false);
         mediaController = new MediaController(getActivity());
 
         upload = (Button) inflatedView.findViewById(R.id.upload);
