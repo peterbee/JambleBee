@@ -211,7 +211,7 @@ public class Record extends Activity {
 //                // show alert that video selected is null .
 //                switch (view.getId()) {
 //                    case R.id.upload:
-//                        loadVideo();
+//                        ();
 //                        break;
 //                    case R.id.button_capture:
 //                        break;

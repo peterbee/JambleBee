@@ -22,11 +22,15 @@ import java.util.Locale;
 import edu.msudevner.jamblebee.R;
 
 
+
+
 public class MainActivity extends FragmentActivity implements DJFragment.OnFragmentInteractionListener, RecordFragment.OnFragmentInteractionListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
     ViewPager mViewPager;
+    RecordFragment recordFragment;
+    DJFragment djFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +38,18 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
         setContentView(R.layout.activity_main);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
+        recordFragment = new RecordFragment();
+        djFragment = new DJFragment();
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
     }
 
+    public void loadVideo(View view) {
+        recordFragment.loadVideo(view);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,9 +94,9 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
 
             switch (position) {
                 case 0:
-                    return new RecordFragment();
+                    return recordFragment;
                 case 1:
-                    return new DJFragment();
+                    return djFragment;
             }
             return null;
         }
