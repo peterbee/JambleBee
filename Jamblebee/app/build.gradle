@@ -35,5 +35,6 @@ dependencies {
     compile (group: 'org.apache.httpcomponents' , name: 'httpmime' , version: '4.3.5') {
         exclude module: 'org.apache.httpcomponents:httpclient'
     }
+    compile 'com.android.support:support-v4:21.0.0'
     testCompile 'junit:junit:4.12'
 }
