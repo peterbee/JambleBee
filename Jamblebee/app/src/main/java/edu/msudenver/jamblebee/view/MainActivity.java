@@ -2,9 +2,14 @@ package edu.msudenver.jamblebee.view;
 
 import android.app.Activity;
 import android.app.ActionBar;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,21 +17,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+import java.util.Locale;
+
 import edu.msudevner.jamblebee.R;
 
 
-public class MainActivity extends Activity implements DJFragment.OnFragmentInteractionListener, RecordFragment.OnFragmentInteractionListener {
+public class MainActivity extends FragmentActivity implements DJFragment.OnFragmentInteractionListener, RecordFragment.OnFragmentInteractionListener {
+
+    SectionsPagerAdapter mSectionsPagerAdapter;
+
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new RecordFragment())
-                    .add(R.id.container, new DJFragment())
-                    .commit();
-        }
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
     }
 
 
@@ -56,20 +68,47 @@ public class MainActivity extends Activity implements DJFragment.OnFragmentInter
     public void onFragmentInteraction(Uri uri) {
 
     }
-
     /**
-     * A placeholder fragment containing a simple view.
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public PlaceholderFragment() {
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+        public android.support.v4.app.Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+
+            switch (position) {
+                case 0:
+                    return new RecordFragment();
+                case 1:
+                    return new DJFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Locale l = Locale.getDefault();
+            switch (position) {
+                case 0:
+                    return "Record View";
+                case 1:
+                    return getString(R.string.title_activity_video_project_editor).toUpperCase(l);
+             }
+            return null;
         }
     }
+
+
 }
