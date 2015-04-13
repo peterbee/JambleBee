@@ -15,6 +15,7 @@
         android:weightSum="1">
 
             <Button
+                android:id="@+id/upload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="loadVideo"
@@ -69,7 +70,7 @@
 
                 >
                 <TextureView
-                    android:id="@id/surface_view"
+                    android:id="@+id/surface_view"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
 
@@ -96,9 +97,6 @@
 
         </RelativeLayout>
 
-
-
-
             <GridView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -109,7 +107,6 @@
                 android:numColumns="5"
                 android:scrollbarAlwaysDrawVerticalTrack="true"
                 />
-
 
     </LinearLayout>
 
