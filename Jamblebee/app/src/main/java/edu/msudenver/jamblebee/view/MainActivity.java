@@ -129,5 +129,33 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch(item.getItemId()) {
+            case R.id.menu_action_editor:
+                startActivity(new Intent(Record.this, VideoProjectEditor.class));
+                // switch activity
+                break;
+            case R.id.menu_load_project:
+                loadProject();
+                break;
+            case R.id.menu_new_project:
+                newProject();
+                break;
+            case R.id.menu_save_project:
+                saveProject();
+                break;
+            case R.id.menu_delete_project:
+                deleteProject();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

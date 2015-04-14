@@ -77,6 +77,12 @@ public class RecordFragment extends Fragment {
     GridView gridView;                  // For displaying each track in project and record user interaction
     ArrayList<VideoThumbnail> files;
     String UUID;
+    ArrayList<String> filesLocation = new ArrayList<String>();
+    JSONdata metaData;
+    JSONObject currentProject;
+    File currentFile;
+    MediaPlayer mediaPlayer;            // The media player
+    static int count = 0;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -125,18 +131,28 @@ public class RecordFragment extends Fragment {
         // Inflate the layout for this fragment
         inflatedView = inflater.inflate(R.layout.fragment_record, container, false);
         mediaController = new MediaController(getActivity());
+        metaData = new JSONdata();
+        currentProject = new JSONObject();
+        try {
+            currentProject.put("locations",new JSONArray());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        upload = (Button) findViewById(R.id.upload);
         mPreview = (TextureView) inflatedView.findViewById(R.id.surface_view);
         captureButton = (ImageButton) inflatedView.findViewById(R.id.button_capture);
         stop = (ImageButton) inflatedView.findViewById(R.id.stop_recording);
         gridView = (GridView) inflatedView.findViewById(R.id.gridView);
         play = (ImageButton) inflatedView.findViewById(R.id.play_button);
         playBackVideo = (VideoView) inflatedView.findViewById(R.id.video);
-
+        save = (ImageButton) findViewById(R.id.save_video);
 
         //Hide + disable stop and pause button when start
         stop.setVisibility(View.INVISIBLE);
         stop.setEnabled(false);
+        save.setVisibility(View.INVISIBLE);
+        save.setEnabled(false);
         pausePlay = (ImageButton) inflatedView.findViewById(R.id.pause_button);
         pausePlay.setVisibility(View.INVISIBLE);
         pausePlay.setEnabled(false);
@@ -185,6 +201,8 @@ public class RecordFragment extends Fragment {
     public void onCaptureClick(View v){
         captureButton.setEnabled(false);
         captureButton.setVisibility(View.INVISIBLE);
+        save.setEnabled(false);
+        save.setVisibility(View.INVISIBLE);
         stop.setEnabled(true);
         stop.setVisibility(View.VISIBLE);
         new MediaPrepareTask().execute(null, null, null);
@@ -201,25 +219,158 @@ public class RecordFragment extends Fragment {
         releaseCamera();
         captureButton.setEnabled(true);
         captureButton.setVisibility(View.VISIBLE);
+        save.setEnabled(true);
+        save.setVisibility(View.VISIBLE);
         stop.setEnabled(false);
         stop.setVisibility(View.INVISIBLE);
     }
 
+    /*
     public void onPlayClick(View v){
+        if(playBackVideo!=null) {
         playBackVideo.start();
         pausePlay.setVisibility(View.VISIBLE);
         pausePlay.setEnabled(true);
         play.setVisibility(View.INVISIBLE);
         play.setEnabled(false);
+            if(count == 0){
+            //    playSounds();
+                count = 1;
+            }
+        }
+        else{
+            dialogDisplay("No video to play, please load");
+
+        }
     }
+
 
     public void onPausePlayClick(View v){
         playBackVideo.pause();
         play.setVisibility(View.VISIBLE);
         play.setEnabled(true);
-        pausePlay.setVisibility(View.INVISIBLE);
-        pausePlay.setEnabled(false);
+
     }
+*/
+
+    private void loadProject() {
+        count = 0;
+        ArrayList<String> projectNames = metaData.getProjectsNames();
+        String[] list = new String[projectNames.size()];
+        for(int i=0;i<projectNames.size();i++)
+            list[i] = projectNames.get(i);
+        final String[] projects = list;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick A Project to Load")
+                .setItems(projects, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //JSONObject projectObject = (JSONObject) projectBrowser.loadProject(projectName);
+                        try {
+                            String projectName = projects[which];
+                            currentProject = metaData.getProject(projectName);
+                            System.out.println("current project : "  + currentProject.toString());
+                            if (currentProject.get("locations")!=null) {
+                                ArrayList<String> list = (ArrayList<String>) currentProject.get("locations");
+                                if (list.size() > 0) {
+                                    filesLocation = new ArrayList<String>();
+                                    for (int i = 0; i < list.size(); i++) {
+                                        filesLocation.add((String) list.get(i));
+                                    }
+
+                                    loadVideo(filesLocation);
+                                }else{
+                                    dialogDisplay("no videos in this project");
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void saveProject() {
+        final EditText userInput = new EditText(this);
+        userInput.setMaxLines(1);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter the Name of the Project")
+                .setView(userInput)
+                .setCancelable(false)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String projectName = userInput.getText().toString();
+                        //projectName = projectName.replaceAll("\\s+","");
+                        JSONObject object = new JSONObject();
+                        try {
+                            object.put("name", projectName);
+                            object.put("locations", filesLocation);
+                            metaData.putProject(object);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void newProject() {
+        currentProject = new JSONObject();
+        try {
+            JSONObject locations = currentProject.put("locations", new JSONArray());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        filesLocation = new ArrayList<String>();
+        loadVideo(filesLocation);
+    }
+
+
+    private void deleteProject() {
+
+        ArrayList<String> projectNames = metaData.getProjectsNames();
+        String[] list = new String[projectNames.size()];
+        for(int i=0;i<projectNames.size();i++)
+            list[i] = projectNames.get(i);
+        final String[] projects = list;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick A Project to Delete")
+                .setItems(projects, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        metaData.deleteProject(metaData.getProject(projects[which]));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 
     public void loadVideo(View v){
         // Gets the UUID (Unique Device ID) for storing video files.
@@ -227,7 +378,6 @@ public class RecordFragment extends Fragment {
         files = getProjectContents(VIDEOS_LOCATION);
 
         ///gridview work
-
         ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
         gridView.setAdapter(adapter);
 
@@ -253,25 +403,48 @@ public class RecordFragment extends Fragment {
         });
     }
 
-    private ArrayList<VideoThumbnail> getProjectContents(String location) {
-        File dir = new File(location);
-        File[] directoryListing = dir.listFiles();
+    // Method which adds all the .mp4 files to our files ArrayList from the project location
+    private ArrayList<VideoThumbnail> getProjectContents(ArrayList<String> locations) {
         ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
-        if (directoryListing != null) {
-            for (File child : directoryListing) {
-                if (child.getName().endsWith(".mp4")) {
-                    Bitmap thumb = ThumbnailUtils.createVideoThumbnail(child.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
-                    VideoThumbnail v = new VideoThumbnail(child, thumb);
-                    files.add(v);
-                }
+        for(int i=0;i<locations.size();i++) {
+            File file = new File(locations.get(i));
+            if (file!=null ){//.endsWith(".mp4")) {
+                Bitmap thumb = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
+                VideoThumbnail v = new VideoThumbnail(file, thumb);
+                files.add(v);
             }
+
+
         }
         return files;
     }
 
     @Override
     public void onPause() {
-        super.onPause();
+        super.onPause();private void deleteProject() {
+
+            ArrayList<String> projectNames = metaData.getProjectsNames();
+            String[] list = new String[projectNames.size()];
+            for(int i=0;i<projectNames.size();i++)
+                list[i] = projectNames.get(i);
+            final String[] projects = list;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Pick A Project to Delete")
+                    .setItems(projects, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            metaData.deleteProject(metaData.getProject(projects[which]));
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event
