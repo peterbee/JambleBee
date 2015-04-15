@@ -35,22 +35,8 @@
                     android:id="@+id/video"
                     android:layout_centerHorizontal="true" />
 
-                <ImageButton
-                    android:id="@+id/play_button"
-                    android:layout_width="250px"
-                    android:layout_height="250px"
-                    android:onClick="onPlayClick"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:background="@drawable/ic_action_av_play_circle_outline"
-                    />
-                <ImageButton
-                    android:id="@+id/pause_button"
-                    android:layout_width="250px"
-                    android:layout_height="250px"
-                    android:onClick="onPausePlayClick"
-                    android:layout_gravity="right|top"
-                    android:background="@drawable/ic_action_av_pause_circle_fill"
-                    />
+
+
 
             </FrameLayout>
             <FrameLayout
@@ -80,6 +66,14 @@
                         android:onClick="onCaptureClick"
                         android:layout_gravity="center_vertical|center_horizontal"
                         android:background="@drawable/record_button"
+                        />
+                    <ImageButton
+                        android:id="@+id/save_video"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="end|top"
+                        android:onClick="onSaveVideoClick"
+                        android:background="@drawable/ic_action_content_archive"
                         />
                     <ImageButton
                         android:id="@+id/stop_recording"

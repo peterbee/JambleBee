@@ -3,9 +3,11 @@ package edu.msudenver.jamblebee.view;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -22,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,12 +32,17 @@ import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.msudenver.jamblebee.controller.CameraHelper;
+import edu.msudenver.jamblebee.model.JSONdata;
 import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
 
@@ -73,7 +81,7 @@ public class RecordFragment extends Fragment {
     private boolean isRecording = false;
     private static final String TAG = "Recorder";
     private ImageButton captureButton,play;
-    private ImageButton stop,pausePlay;
+    private ImageButton stop,pausePlay,save;
     GridView gridView;                  // For displaying each track in project and record user interaction
     ArrayList<VideoThumbnail> files;
     String UUID;
@@ -89,6 +97,10 @@ public class RecordFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    public RecordFragment() {
+
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -108,9 +120,7 @@ public class RecordFragment extends Fragment {
         return fragment;
     }
 
-    public RecordFragment() {
-        // Required empty public constructor
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,23 +149,20 @@ public class RecordFragment extends Fragment {
             e.printStackTrace();
         }
 
-        upload = (Button) findViewById(R.id.upload);
+
         mPreview = (TextureView) inflatedView.findViewById(R.id.surface_view);
         captureButton = (ImageButton) inflatedView.findViewById(R.id.button_capture);
         stop = (ImageButton) inflatedView.findViewById(R.id.stop_recording);
         gridView = (GridView) inflatedView.findViewById(R.id.gridView);
         play = (ImageButton) inflatedView.findViewById(R.id.play_button);
         playBackVideo = (VideoView) inflatedView.findViewById(R.id.video);
-        save = (ImageButton) findViewById(R.id.save_video);
+        save = (ImageButton) inflatedView.findViewById(R.id.save_video);
 
         //Hide + disable stop and pause button when start
         stop.setVisibility(View.INVISIBLE);
         stop.setEnabled(false);
         save.setVisibility(View.INVISIBLE);
         save.setEnabled(false);
-        pausePlay = (ImageButton) inflatedView.findViewById(R.id.pause_button);
-        pausePlay.setVisibility(View.INVISIBLE);
-        pausePlay.setEnabled(false);
         return inflatedView;
     }
 
@@ -225,33 +232,59 @@ public class RecordFragment extends Fragment {
         stop.setVisibility(View.INVISIBLE);
     }
 
-    /*
-    public void onPlayClick(View v){
-        if(playBackVideo!=null) {
-        playBackVideo.start();
-        pausePlay.setVisibility(View.VISIBLE);
-        pausePlay.setEnabled(true);
-        play.setVisibility(View.INVISIBLE);
-        play.setEnabled(false);
-            if(count == 0){
-            //    playSounds();
-                count = 1;
-            }
-        }
-        else{
-            dialogDisplay("No video to play, please load");
+    public void onSaveVideoClick(View v){
+//            mMediaRecorder.stop();  // stop the recording
+        //mCamera.lock();         // take camera access back from MediaRecorder
+        //releaseCamera();
 
+        final EditText userInput = new EditText(getActivity());
+        userInput.setMaxLines(1);
+        filesLocation.add(currentFile.getAbsolutePath());
+        System.out.println("files locations now  : " + filesLocation.get(0));
+        // mMediaRecorder.stop();
+        releaseMediaRecorder(); // release the MediaRecorder object
+        releaseCamera();
+        // mCamera.lock();
+        loadVideo(filesLocation);
+
+
+
+    }
+
+    public void loadVideo(ArrayList<String> locations){
+        // Gets the UUID (Unique Device ID) for storing video files.
+        files = getProjectContents(locations);
+
+        ///gridview work
+        gridView = (GridView) inflatedView.findViewById(R.id.gridView);
+        ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
+        gridView.setAdapter(adapter);
+
+        //set default to the first video
+        if(files.size()!=0) {
+            vidLoc = files.get(0).getFile().getAbsolutePath();
+            playBackVideo = (VideoView) inflatedView.findViewById(R.id.video);
+            mediaController.setAnchorView(playBackVideo);
+            Uri uri = Uri.parse(vidLoc);
+            playBackVideo.setVideoURI(uri);
+            playBackVideo.setMediaController(mediaController);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    vidLoc = files.get(position).getFile().getAbsolutePath();
+                    //System.out.println("VIDLOC : "+vidLoc);
+
+                    Uri uri = Uri.parse(vidLoc);
+                    playBackVideo.setVideoURI(uri);
+                    playBackVideo.setMediaController(mediaController);
+                    //alertDialog.dismiss();
+                }
+            });
         }
     }
 
 
-    public void onPausePlayClick(View v){
-        playBackVideo.pause();
-        play.setVisibility(View.VISIBLE);
-        play.setEnabled(true);
-
-    }
-*/
 
     private void loadProject() {
         count = 0;
@@ -260,7 +293,7 @@ public class RecordFragment extends Fragment {
         for(int i=0;i<projectNames.size();i++)
             list[i] = projectNames.get(i);
         final String[] projects = list;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Pick A Project to Load")
                 .setItems(projects, new DialogInterface.OnClickListener() {
                     @Override
@@ -301,9 +334,9 @@ public class RecordFragment extends Fragment {
     }
 
     private void saveProject() {
-        final EditText userInput = new EditText(this);
+        final EditText userInput = new EditText(getActivity());
         userInput.setMaxLines(1);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Enter the Name of the Project")
                 .setView(userInput)
                 .setCancelable(false)
@@ -353,7 +386,7 @@ public class RecordFragment extends Fragment {
         for(int i=0;i<projectNames.size();i++)
             list[i] = projectNames.get(i);
         final String[] projects = list;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Pick A Project to Delete")
                 .setItems(projects, new DialogInterface.OnClickListener() {
                     @Override
@@ -372,37 +405,6 @@ public class RecordFragment extends Fragment {
     }
 
 
-    public void loadVideo(View v){
-        // Gets the UUID (Unique Device ID) for storing video files.
-        UUID = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
-        files = getProjectContents(VIDEOS_LOCATION);
-
-        ///gridview work
-        ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
-        gridView.setAdapter(adapter);
-
-        //set default to the first video
-        vidLoc = files.get(0).getFile().getAbsolutePath();
-
-        mediaController.setAnchorView(playBackVideo);
-        Uri uri = Uri.parse(vidLoc);
-        playBackVideo.setVideoURI(uri);
-        playBackVideo.setMediaController(mediaController);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                vidLoc = files.get(position).getFile().getAbsolutePath();
-                //System.out.println("VIDLOC : "+vidLoc);
-
-                Uri uri = Uri.parse(vidLoc);
-                playBackVideo.setVideoURI(uri);
-                playBackVideo.setMediaController(mediaController);
-                //alertDialog.dismiss();
-            }
-        });
-    }
-
     // Method which adds all the .mp4 files to our files ArrayList from the project location
     private ArrayList<VideoThumbnail> getProjectContents(ArrayList<String> locations) {
         ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
@@ -419,37 +421,14 @@ public class RecordFragment extends Fragment {
         return files;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();private void deleteProject() {
 
-            ArrayList<String> projectNames = metaData.getProjectsNames();
-            String[] list = new String[projectNames.size()];
-            for(int i=0;i<projectNames.size();i++)
-                list[i] = projectNames.get(i);
-            final String[] projects = list;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Pick A Project to Delete")
-                    .setItems(projects, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            metaData.deleteProject(metaData.getProject(projects[which]));
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-        // if we are using MediaRecorder, release it first
-        releaseMediaRecorder();
-        // release the camera immediately on pause event
-        releaseCamera();
+    public void dialogDisplay(String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(message);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
 
     private void releaseMediaRecorder(){
         if (mMediaRecorder != null) {
