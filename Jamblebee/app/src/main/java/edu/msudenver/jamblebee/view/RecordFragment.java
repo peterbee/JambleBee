@@ -154,7 +154,6 @@ public class RecordFragment extends Fragment {
         captureButton = (ImageButton) inflatedView.findViewById(R.id.button_capture);
         stop = (ImageButton) inflatedView.findViewById(R.id.stop_recording);
         gridView = (GridView) inflatedView.findViewById(R.id.gridView);
-        play = (ImageButton) inflatedView.findViewById(R.id.play_button);
         playBackVideo = (VideoView) inflatedView.findViewById(R.id.video);
         save = (ImageButton) inflatedView.findViewById(R.id.save_video);
 
@@ -245,13 +244,16 @@ public class RecordFragment extends Fragment {
         releaseMediaRecorder(); // release the MediaRecorder object
         releaseCamera();
         // mCamera.lock();
-        loadVideo(filesLocation);
+        loadVideoList(filesLocation);
 
 
 
     }
+    public void loadVideo(View v){
+        loadVideoList(filesLocation);
+    }
 
-    public void loadVideo(ArrayList<String> locations){
+    public void loadVideoList(ArrayList<String> locations){
         // Gets the UUID (Unique Device ID) for storing video files.
         files = getProjectContents(locations);
 
@@ -286,7 +288,7 @@ public class RecordFragment extends Fragment {
 
 
 
-    private void loadProject() {
+     void loadProject() {
         count = 0;
         ArrayList<String> projectNames = metaData.getProjectsNames();
         String[] list = new String[projectNames.size()];
@@ -312,7 +314,7 @@ public class RecordFragment extends Fragment {
                                         filesLocation.add((String) list.get(i));
                                     }
 
-                                    loadVideo(filesLocation);
+                                    loadVideoList(filesLocation);
                                 }else{
                                     dialogDisplay("no videos in this project");
                                 }
@@ -333,7 +335,7 @@ public class RecordFragment extends Fragment {
         alertDialog.show();
     }
 
-    private void saveProject() {
+     void saveProject() {
         final EditText userInput = new EditText(getActivity());
         userInput.setMaxLines(1);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -367,7 +369,7 @@ public class RecordFragment extends Fragment {
         alertDialog.show();
     }
 
-    private void newProject() {
+     void newProject() {
         currentProject = new JSONObject();
         try {
             JSONObject locations = currentProject.put("locations", new JSONArray());
@@ -375,11 +377,11 @@ public class RecordFragment extends Fragment {
             e.printStackTrace();
         }
         filesLocation = new ArrayList<String>();
-        loadVideo(filesLocation);
+        loadVideoList(filesLocation);
     }
 
 
-    private void deleteProject() {
+     void deleteProject() {
 
         ArrayList<String> projectNames = metaData.getProjectsNames();
         String[] list = new String[projectNames.size()];
@@ -406,7 +408,7 @@ public class RecordFragment extends Fragment {
 
 
     // Method which adds all the .mp4 files to our files ArrayList from the project location
-    private ArrayList<VideoThumbnail> getProjectContents(ArrayList<String> locations) {
+     ArrayList<VideoThumbnail> getProjectContents(ArrayList<String> locations) {
         ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
         for(int i=0;i<locations.size();i++) {
             File file = new File(locations.get(i));
@@ -430,7 +432,7 @@ public class RecordFragment extends Fragment {
     }
 
 
-    private void releaseMediaRecorder(){
+     void releaseMediaRecorder(){
         if (mMediaRecorder != null) {
             // clear recorder configuration
             mMediaRecorder.reset();
@@ -443,7 +445,7 @@ public class RecordFragment extends Fragment {
         }
     }
 
-    private void releaseCamera(){
+     void releaseCamera(){
         if (mCamera != null){
             // release the camera for other applications
             mCamera.release();
@@ -452,7 +454,7 @@ public class RecordFragment extends Fragment {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private boolean prepareVideoRecorder(){
+     boolean prepareVideoRecorder(){
 
         // BEGIN_INCLUDE (configure_preview)
         mCamera = CameraHelper.getDefaultCameraInstance();
@@ -543,7 +545,7 @@ public class RecordFragment extends Fragment {
         }
     }
 
-    private class MyListAdapter extends ArrayAdapter<VideoThumbnail> {
+     class MyListAdapter extends ArrayAdapter<VideoThumbnail> {
         public MyListAdapter() {
             super(getActivity(), R.layout.grid_item, files);
         }
