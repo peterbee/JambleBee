@@ -1,5 +1,6 @@
 package edu.msudenver.jamblebee.view;
 
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -101,7 +102,6 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
         public android.support.v4.app.Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-
             switch (position) {
                 case 0:
                     return recordFragment;
