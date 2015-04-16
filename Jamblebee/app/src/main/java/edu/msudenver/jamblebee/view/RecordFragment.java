@@ -3,6 +3,7 @@ package edu.msudenver.jamblebee.view;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -43,6 +44,7 @@ import java.util.List;
 
 import edu.msudenver.jamblebee.controller.CameraHelper;
 import edu.msudenver.jamblebee.model.JSONdata;
+import edu.msudenver.jamblebee.model.VideoData;
 import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
 
@@ -272,16 +274,45 @@ public class RecordFragment extends Fragment {
             playBackVideo.setVideoURI(uri);
             playBackVideo.setMediaController(mediaController);
 
+//            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    vidLoc = files.get(position).getFile().getAbsolutePath();
+//                    //System.out.println("VIDLOC : "+vidLoc);
+//
+//                    Uri uri = Uri.parse(vidLoc);
+//                    playBackVideo.setVideoURI(uri);
+//                    playBackVideo.setMediaController(mediaController);
+//                    playBackVideo.start();
+//                    //alertDialog.dismiss();
+//                }
+//            });
+            // This is what happens every time an item is selected in the gridview
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    vidLoc = files.get(position).getFile().getAbsolutePath();
-                    //System.out.println("VIDLOC : "+vidLoc);
-
-                    Uri uri = Uri.parse(vidLoc);
-                    playBackVideo.setVideoURI(uri);
-                    playBackVideo.setMediaController(mediaController);
-                    //alertDialog.dismiss();
+                public void onItemClick(AdapterView parent, View v, int position, long id) {
+                    if (playBackVideo.isPlaying() ) {
+                        final int time = playBackVideo.getCurrentPosition();
+                        vidLoc = files.get(position).getFile().getAbsolutePath();
+                        Uri uri = Uri.parse(vidLoc);
+                        playBackVideo.setVideoURI(uri);
+                        playBackVideo.setMediaController(mediaController);
+                        playBackVideo.seekTo(time);
+                        playBackVideo.requestFocus();
+                        playBackVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            public void onPrepared(MediaPlayer mp) {
+                                playBackVideo.seekTo(time);
+                            }
+                        });
+                        setUpVideo(position);
+                        playBackVideo.start();
+                    } else {
+                        vidLoc = files.get(position).getFile().getAbsolutePath();
+                        Uri uri = Uri.parse(vidLoc);
+                        playBackVideo.setVideoURI(uri);
+                        playBackVideo.setMediaController(mediaController);
+                        playBackVideo.start();
+                    }
                 }
             });
         }
@@ -289,7 +320,15 @@ public class RecordFragment extends Fragment {
 
 
 
-     void loadProject() {
+    private void setUpVideo(int i) {
+        playBackVideo.stopPlayback();
+        String vidLoc = files.get(i).getFile().getAbsolutePath();
+        playBackVideo.setVideoPath(vidLoc);
+    }
+
+
+
+    void loadProject() {
         count = 0;
         ArrayList<String> projectNames = metaData.getProjectsNames();
         String[] list = new String[projectNames.size()];
@@ -337,37 +376,42 @@ public class RecordFragment extends Fragment {
     }
 
      void saveProject() {
-        final EditText userInput = new EditText(getActivity());
-        userInput.setMaxLines(1);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Enter the Name of the Project")
-                .setView(userInput)
-                .setCancelable(false)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String projectName = userInput.getText().toString();
-                        //projectName = projectName.replaceAll("\\s+","");
-                        JSONObject object = new JSONObject();
-                        try {
-                            object.put("name", projectName);
-                            object.put("locations", filesLocation);
-                            metaData.putProject(object);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+         if(filesLocation.size()==0){
+             dialogDisplay("No videos in the project");
+         }
+         else {
+             final EditText userInput = new EditText(getActivity());
+             userInput.setMaxLines(1);
+             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+             builder.setTitle("Enter the Name of the Project")
+                     .setView(userInput)
+                     .setCancelable(false)
+                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                         @Override
+                         public void onClick(DialogInterface dialog, int which) {
+                             String projectName = userInput.getText().toString();
+                             //projectName = projectName.replaceAll("\\s+","");
+                             JSONObject object = new JSONObject();
+                             try {
+                                 object.put("name", projectName);
+                                 object.put("locations", filesLocation);
+                                 metaData.putProject(object);
+                             } catch (JSONException e) {
+                                 e.printStackTrace();
+                             }
 
 
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+                         }
+                     })
+                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                         @Override
+                         public void onClick(DialogInterface dialog, int which) {
+                             dialog.cancel();
+                         }
+                     });
+             AlertDialog alertDialog = builder.create();
+             alertDialog.show();
+         }
     }
 
      void newProject() {

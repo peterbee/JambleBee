@@ -148,7 +148,7 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
             default:
                 break;
         }
-        return this.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
 
