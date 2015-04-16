@@ -231,8 +231,9 @@ public class RecordFragment extends Fragment {
         stop.setVisibility(View.INVISIBLE);
     }
 
+
     public void onSaveVideoClick(View v){
-//            mMediaRecorder.stop();  // stop the recording
+   //         mMediaRecorder.stop();  // stop the recording
         //mCamera.lock();         // take camera access back from MediaRecorder
         //releaseCamera();
 
@@ -502,11 +503,11 @@ public class RecordFragment extends Fragment {
         mMediaRecorder.setProfile(profile);
 
         // Step 4: Set output file
-        File temp = CameraHelper.getOutputMediaFile(VIDEOS_LOCATION);
-        if (temp == null) {
+        currentFile = CameraHelper.getOutputMediaFile(VIDEOS_LOCATION);
+        if (currentFile == null) {
             return false;
         }
-        mMediaRecorder.setOutputFile(temp.getAbsolutePath());
+        mMediaRecorder.setOutputFile(currentFile.getAbsolutePath());
 
         // Step 5: Prepare configured MediaRecorder
         try {
@@ -533,7 +534,7 @@ public class RecordFragment extends Fragment {
                 // now you can start recording
                 mMediaRecorder.start();
                 // video.start();
-                video.requestFocus();
+               // video.requestFocus(); causes bugs
                 vidLoc = null;
                 isRecording = true;
             } else {
@@ -565,3 +566,5 @@ public class RecordFragment extends Fragment {
         }
     }
 }
+
+

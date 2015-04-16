@@ -55,6 +55,10 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
         recordFragment.onCaptureClick(v);
     }
 
+    public void onSaveVideoClick(View v) {
+        recordFragment.onSaveVideoClick(v);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
