@@ -29,4 +29,20 @@ public class ProjectContents {
         }
         return files;
     }
+
+    // Method which gets all the files relative to a project and returns them
+    public ArrayList<VideoThumbnail> getProjectContentsFromLoc(ArrayList<String> locations) {
+        ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
+        for(int i=0;i<locations.size();i++) {
+            File file = new File(locations.get(i));
+            if (file!=null ){//.endsWith(".mp4")) {
+                Bitmap thumb = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
+                VideoThumbnail v = new VideoThumbnail(file, thumb);
+                files.add(v);
+            }
+
+
+        }
+        return files;
+    }
 }

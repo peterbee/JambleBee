@@ -45,6 +45,7 @@ import java.util.List;
 import edu.msudenver.jamblebee.controller.CameraHelper;
 import edu.msudenver.jamblebee.model.AudioData;
 import edu.msudenver.jamblebee.model.JSONdata;
+import edu.msudenver.jamblebee.model.ProjectContents;
 import edu.msudenver.jamblebee.model.VideoData;
 import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
@@ -87,6 +88,7 @@ public class RecordFragment extends Fragment {
     File currentFile;
     static int count = 0;
     AudioData ad;
+    ProjectContents pc;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -137,6 +139,7 @@ public class RecordFragment extends Fragment {
         metaData = new JSONdata();
         currentProject = new JSONObject();
         ad = new AudioData(getActivity());
+        pc = new ProjectContents();
 
 
         try {
@@ -252,7 +255,7 @@ public class RecordFragment extends Fragment {
 
     public void loadVideoList(ArrayList<String> locations){
         // Gets the UUID (Unique Device ID) for storing video files.
-        files = getProjectContents(locations);
+        files = pc.getProjectContentsFromLoc(locations);
 
         ///gridview work
         gridView = (GridView) inflatedView.findViewById(R.id.gridView);
@@ -292,7 +295,7 @@ public class RecordFragment extends Fragment {
                         playBackVideo.setVideoURI(uri);
                         playBackVideo.setMediaController(mediaController);
                         playBackVideo.seekTo(time);
-                        playBackVideo.requestFocus();
+                    //    playBackVideo.requestFocus();
                         playBackVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             public void onPrepared(MediaPlayer mp) {
                                 playBackVideo.seekTo(time);
@@ -443,23 +446,6 @@ public class RecordFragment extends Fragment {
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-
-    // Method which adds all the .mp4 files to our files ArrayList from the project location
-     ArrayList<VideoThumbnail> getProjectContents(ArrayList<String> locations) {
-        ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
-        for(int i=0;i<locations.size();i++) {
-            File file = new File(locations.get(i));
-            if (file!=null ){//.endsWith(".mp4")) {
-                Bitmap thumb = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
-                VideoThumbnail v = new VideoThumbnail(file, thumb);
-                files.add(v);
-            }
-
-
-        }
-        return files;
     }
 
 
