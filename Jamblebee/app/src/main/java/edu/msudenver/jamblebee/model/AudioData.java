@@ -25,12 +25,16 @@ public class AudioData {
         context = c;
     }
 
+    /**
+     * This method plays all the sounds from videos in the files ArrayList simultaneously
+     *
+     * @param files - the ArrayList containing our .mp4 files.
+     */
     public void playSounds(ArrayList<VideoThumbnail> files) {
         for (int i = 0; i<files.size(); i++) {
             String vidLoc = files.get(i).getFile().getAbsolutePath();
             Uri uri = Uri.parse(vidLoc);
             mediaPlayer = new MediaPlayer();
-        //    mediaPlayer.setOnCompletionListener(CompletionListener);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 mediaPlayer.setDataSource(context, uri);
@@ -39,13 +43,15 @@ public class AudioData {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
-
-    // This Commented out listener is meant to mute the sound from the video view when a gridview
-    // item is selected for recording user actions.
+    /**
+     * This listener is meant to mute the sound from the video view when a gridview
+     * item is selected for recording user actions and playing back those actions.
+     *
+     * @param v - the videoView to be muted.
+     */
     public void muteVideoView(VideoView v) {
         MediaPlayer.OnPreparedListener PreparedListener = new MediaPlayer.OnPreparedListener(){
 
@@ -59,7 +65,6 @@ public class AudioData {
                     }
                     m.setVolume(0f, 0f);
                     m.setLooping(false);
-                    //    m.start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
