@@ -28,6 +28,8 @@ import android.widget.Toast;
 import android.widget.VideoView;
 import android.provider.Settings.Secure;
 
+
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -355,15 +357,15 @@ public class DJFragment extends Fragment {
         mListener = null;
     }
 
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//        }
-//        else {
-//        }
-//    }
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else {
+        }
+    }
 
 
     /**
