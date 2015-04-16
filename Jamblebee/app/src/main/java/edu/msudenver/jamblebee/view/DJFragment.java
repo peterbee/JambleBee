@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import edu.msudenver.jamblebee.model.AudioData;
 import edu.msudenver.jamblebee.model.VideoData;
 import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
@@ -49,7 +50,7 @@ public class DJFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    public static final String VIDEOS_LOCATION = "sdcard/DCIM/Camera";// or "/sdcard/storage/";
+    public static final String VIDEOS_LOCATION = "sdcard/jamblebee_storage";// or "/sdcard/storage/";
 
     ArrayList<VideoThumbnail> files;    // For storing all the files in a project
     ArrayList<VideoData> videos;        // For storing user interactions
@@ -63,6 +64,7 @@ public class DJFragment extends Fragment {
     boolean recording;                  // True if recording, False if not recording
     int playingVideoNumber;             // Variable for moving on to the next video after a switch in play
     private View inflatedView;
+    private AudioData ad;
 
 
     // TODO: Rename and change types of parameters
@@ -132,11 +134,14 @@ public class DJFragment extends Fragment {
             }
         });
 
+        // AudioData to play all the sounds at the same time.
+        ad = new AudioData(getActivity());
+
+        // We need this when we want to mute sound of each video played on the videoView
+        ad.muteVideoView(videoView);
+
         // times is an ArrayList containing the VideoFile objects (user interaction time and path)
         videos = new ArrayList<VideoData>();
-
-        // We need this when we want to mute sound of each video played from gridview
-        //     videoView.setOnPreparedListener(PreparedListener);
 
         // Adds the completion listener to the videoView
         videoView.setOnCompletionListener(CompletionListener);
@@ -147,7 +152,6 @@ public class DJFragment extends Fragment {
         // Sets up the ArrayAdapter to translate our files ArrayList into a scrollable gridview
         ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
         gridView.setAdapter(adapter);
-
 
         // This is what happens every time an item is selected in the gridview
         gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -175,11 +179,8 @@ public class DJFragment extends Fragment {
         });
 
 
-/////////////////////////////////////////Help///////////////////////////////////////////////////////
-
         // This is the Thread that is called every 100 ms to check if the video has switch
         // playback mode only
-        // I need help here
         final Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -207,7 +208,7 @@ public class DJFragment extends Fragment {
             }
         };
 
-        // This is what happens when the play button is clicked - This is where i need the most help
+        // This is what happens when the play button is clicked
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,7 +224,7 @@ public class DJFragment extends Fragment {
                     });
                     handler.postDelayed(r, 100);
                     videoView.start();
-                    playSounds();
+                    ad.playSounds(files);
                 } else {
                     showInstructionToast();
                 }
@@ -270,28 +271,8 @@ public class DJFragment extends Fragment {
         setUpVideo(position);
         videos.add(new VideoData(0, files.get(position).getFile().getAbsolutePath()));
         videoView.start();
-        playSounds();
+        ad.playSounds(files);
     }
-
-    // The current way we are playing sounds from video files - This is our lag issue.
-    private void playSounds() {
-        for (int i = 0; i<files.size(); i++) {
-            String vidLoc = files.get(i).getFile().getAbsolutePath();
-            Uri uri = Uri.parse(vidLoc);
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setOnCompletionListener(CompletionListener);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            try {
-                mediaPlayer.setDataSource(getActivity().getApplicationContext(), uri);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
 
 
     // This listener lets us know when we are finished recording (when the videoView Stops)
@@ -302,32 +283,6 @@ public class DJFragment extends Fragment {
         }
     };
 
-
-
-
-    // This Commented out listener is meant to mute the sound from the video view when a gridview
-    // item is selected for recording user actions.
-/*
-    MediaPlayer.OnPreparedListener PreparedListener = new MediaPlayer.OnPreparedListener(){
-
-        @Override
-        public void onPrepared(MediaPlayer m) {
-            try {
-                if (m.isPlaying()) {
-                    m.stop();
-                   m.release();
-                    m = new MediaPlayer();
-                }
-                m.setVolume(0f, 0f);
-                m.setLooping(false);
-            //    m.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-*/
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
