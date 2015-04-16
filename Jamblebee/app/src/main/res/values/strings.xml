@@ -18,7 +18,9 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_load_project">Load Project</string>
+    <string name="action_save_project">Save Project</string>
+    <string name="action_delete_project">Delete Project</string>
+    <string name="action_new_project">New Project</string>
 
 </resources>

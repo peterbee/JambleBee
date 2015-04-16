@@ -1,6 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="edu.msudenver.jamblebee.view.MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" android:showAsAction="never" />
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".PlayRecordView">
+
+    <item android:id="@+id/menu_action_editor"
+        android:title="@string/action_editor"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_new_project"
+        android:title="@string/action_new_project"/>
+    <item
+        android:id="@+id/menu_load_project"
+        android:title="@string/action_load_project"/>
+
+    <item
+        android:id="@+id/menu_save_project"
+        android:title="@string/action_save_project"/>
+
+    <item
+        android:id="@+id/menu_delete_project"
+        android:title="@string/action_delete_project"/>
 </menu>
