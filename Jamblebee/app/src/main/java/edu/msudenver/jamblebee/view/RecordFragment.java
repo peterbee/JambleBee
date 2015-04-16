@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.msudenver.jamblebee.controller.CameraHelper;
+import edu.msudenver.jamblebee.model.AudioData;
 import edu.msudenver.jamblebee.model.JSONdata;
 import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
@@ -64,33 +65,26 @@ public class RecordFragment extends Fragment {
 
     //Class Variables
     View inflatedView;
-    Button editor;
-    Button browser;
     String VIDEOS_LOCATION = "sdcard/DCIM/Camera/";
     String vidLoc = null;
     MediaController mediaController;
-    VideoView video; //record video
     VideoView playBackVideo;
-    ListView listView = null;
-    AlertDialog alertDialog;
 
     //Recording
     private Camera mCamera;
     private TextureView mPreview;
     private MediaRecorder mMediaRecorder;
     private boolean isRecording = false;
-    private static final String TAG = "Recorder";
-    private ImageButton captureButton,play;
-    private ImageButton stop,pausePlay,save;
+    private ImageButton captureButton;
+    private ImageButton stop,save;
     GridView gridView;                  // For displaying each track in project and record user interaction
     ArrayList<VideoThumbnail> files;
-    String UUID;
     ArrayList<String> filesLocation = new ArrayList<String>();
     JSONdata metaData;
     JSONObject currentProject;
     File currentFile;
-    MediaPlayer mediaPlayer;            // The media player
     static int count = 0;
+    AudioData ad;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -129,9 +123,6 @@ public class RecordFragment extends Fragment {
             mParam1 = getArguments().getString(CONTEXT_KEY);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
     }
 
 
@@ -143,6 +134,9 @@ public class RecordFragment extends Fragment {
         mediaController = new MediaController(getActivity());
         metaData = new JSONdata();
         currentProject = new JSONObject();
+        ad = new AudioData(getActivity());
+
+
         try {
             currentProject.put("locations",new JSONArray());
         } catch (JSONException e) {
@@ -162,14 +156,11 @@ public class RecordFragment extends Fragment {
         stop.setEnabled(false);
         save.setVisibility(View.INVISIBLE);
         save.setEnabled(false);
-        return inflatedView;
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        //Mute the VideoView
+        ad.muteVideoView(playBackVideo);
+
+        return inflatedView;
     }
 
     @Override
@@ -212,6 +203,9 @@ public class RecordFragment extends Fragment {
         stop.setEnabled(true);
         stop.setVisibility(View.VISIBLE);
         new MediaPrepareTask().execute(null, null, null);
+        if (files != null)
+            if (!files.isEmpty())
+                ad.playSounds(files);
     }
 
     public void onPauseRecordClick(View v){
@@ -260,7 +254,7 @@ public class RecordFragment extends Fragment {
 
         ///gridview work
         gridView = (GridView) inflatedView.findViewById(R.id.gridView);
-        ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
+        ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();
         gridView.setAdapter(adapter);
 
         //set default to the first video
@@ -276,12 +270,9 @@ public class RecordFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     vidLoc = files.get(position).getFile().getAbsolutePath();
-                    //System.out.println("VIDLOC : "+vidLoc);
-
                     Uri uri = Uri.parse(vidLoc);
                     playBackVideo.setVideoURI(uri);
                     playBackVideo.setMediaController(mediaController);
-                    //alertDialog.dismiss();
                 }
             });
         }
