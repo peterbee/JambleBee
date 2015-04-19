@@ -1,6 +1,6 @@
 package edu.msudenver.jamblebee.view;
 
-import android.content.pm.ActivityInfo;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -46,13 +46,6 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
 
     }
 
-    public void onPausePlayClick(View v) {
-        recordFragment.onPausePlayClick(v);
-    }
-
-    public void onPlayClick(View v) {
-        recordFragment.onPlayClick(v);
-    }
 
     public void onPauseRecordClick(View v) {
         recordFragment.onPauseRecordClick(v);
@@ -62,6 +55,10 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
         recordFragment.onCaptureClick(v);
     }
 
+    public void onSaveVideoClick(View v) {
+        recordFragment.onSaveVideoClick(v);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -69,20 +66,20 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -102,6 +99,7 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
         public android.support.v4.app.Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
             switch (position) {
                 case 0:
                     return recordFragment;
@@ -127,6 +125,30 @@ public class MainActivity extends FragmentActivity implements DJFragment.OnFragm
              }
             return null;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch(item.getItemId()) {
+            case R.id.menu_load_project:
+                recordFragment.loadProject();
+                break;
+            case R.id.menu_new_project:
+                recordFragment.newProject();
+                break;
+            case R.id.menu_save_project:
+                recordFragment.saveProject();
+                break;
+            case R.id.menu_delete_project:
+                recordFragment.deleteProject();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
