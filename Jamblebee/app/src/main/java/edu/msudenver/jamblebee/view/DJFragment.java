@@ -1,18 +1,11 @@
 package edu.msudenver.jamblebee.view;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,18 +15,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 import android.provider.Settings.Secure;
 
-
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
+import edu.msudenver.jamblebee.model.AudioData;
+import edu.msudenver.jamblebee.model.MyListAdapter;
+import edu.msudenver.jamblebee.model.ProjectContents;
+import edu.msudenver.jamblebee.model.Toaster;
 import edu.msudenver.jamblebee.model.VideoData;
 import edu.msudenver.jamblebee.model.VideoThumbnail;
 import edu.msudevner.jamblebee.R;
@@ -59,14 +50,14 @@ public class DJFragment extends Fragment {
     Button playButton;                  // Button that plays back recorded interactions
     GridView gridView;                  // For displaying each track in project and record user interaction
     Handler handler;                    // For the mid-video call backs - Separate thread that runs timer
-    MediaPlayer mediaPlayer;            // The media player
     MediaController mc;                 // The media Controller
     String UUID;                        // Devices Unique Identifier
     VideoView videoView;                // THE VIDEO VIEW! =)
     boolean recording;                  // True if recording, False if not recording
     int playingVideoNumber;             // Variable for moving on to the next video after a switch in play
     private View inflatedView;
-
+    private AudioData ad;
+    Toaster toaster;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -122,6 +113,9 @@ public class DJFragment extends Fragment {
         // A handler to assist us with our postDelayed Method for when we playback interactions
         handler = new Handler();
 
+        // Creates a toaster
+        toaster = new Toaster(getActivity());
+
         // Sets up the MediaController to the VideoView
         mc = new MediaController(getActivity());
         mc.setAnchorView(videoView);
@@ -130,27 +124,29 @@ public class DJFragment extends Fragment {
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                showInstructionToast();
+                toaster.showInstructionToast();
                 return false;
             }
         });
 
+        // AudioData to play all the sounds at the same time.
+        ad = new AudioData(getActivity());
+
+        // We need this when we want to mute sound of each video played on the videoView
+        ad.muteVideoView(videoView);
+
         // times is an ArrayList containing the VideoFile objects (user interaction time and path)
         videos = new ArrayList<VideoData>();
-
-        // We need this when we want to mute sound of each video played from gridview
-        //     videoView.setOnPreparedListener(PreparedListener);
 
         // Adds the completion listener to the videoView
         videoView.setOnCompletionListener(CompletionListener);
 
         // Gets all the .mp4s and adds them to files array list (see method below)
-        files = getProjectContents(VIDEOS_LOCATION);
+        files = new ProjectContents().getProjectContents(VIDEOS_LOCATION);
 
         // Sets up the ArrayAdapter to translate our files ArrayList into a scrollable gridview
-        ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter();//(this, android.R.layout.select_dialog_item, files);
+        ArrayAdapter<VideoThumbnail> adapter = new MyListAdapter(getActivity(), files);//(this, android.R.layout.select_dialog_item, files);
         gridView.setAdapter(adapter);
-
 
         // This is what happens every time an item is selected in the gridview
         gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -178,11 +174,8 @@ public class DJFragment extends Fragment {
         });
 
 
-/////////////////////////////////////////Help///////////////////////////////////////////////////////
-
         // This is the Thread that is called every 100 ms to check if the video has switch
         // playback mode only
-        // I need help here
         final Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -210,7 +203,7 @@ public class DJFragment extends Fragment {
             }
         };
 
-        // This is what happens when the play button is clicked - This is where i need the most help
+        // This is what happens when the play button is clicked
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,9 +219,9 @@ public class DJFragment extends Fragment {
                     });
                     handler.postDelayed(r, 100);
                     videoView.start();
-                    playSounds();
+                    ad.playSounds(files);
                 } else {
-                    showInstructionToast();
+                    toaster.showInstructionToast();
                 }
             }
         });
@@ -249,52 +242,14 @@ public class DJFragment extends Fragment {
     }
 
 
-    // Method which adds all the .mp4 files to our files ArrayList from the project location
-    private ArrayList<VideoThumbnail> getProjectContents(String location) {
-        File dir = new File(location);
-        File[] directoryListing = dir.listFiles();
-        ArrayList<VideoThumbnail> files = new ArrayList<VideoThumbnail>();
-        if (directoryListing != null) {
-            for (File child : directoryListing) {
-                if (child.getName().endsWith(".mp4")) {
-                    Bitmap thumb = ThumbnailUtils.createVideoThumbnail(child.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND);
-                    VideoThumbnail v = new VideoThumbnail(child, thumb);
-                    files.add(v);
-                }
-            }
-        }
-        return files;
-    }
-
-
     // Method which starts the recording process
     public void record(int position) {
         recording = true;
         setUpVideo(position);
         videos.add(new VideoData(0, files.get(position).getFile().getAbsolutePath()));
         videoView.start();
-        playSounds();
+        ad.playSounds(files);
     }
-
-    // The current way we are playing sounds from video files - This is our lag issue.
-    private void playSounds() {
-        for (int i = 0; i<files.size(); i++) {
-            String vidLoc = files.get(i).getFile().getAbsolutePath();
-            Uri uri = Uri.parse(vidLoc);
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setOnCompletionListener(CompletionListener);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            try {
-                mediaPlayer.setDataSource(getActivity().getApplicationContext(), uri);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
 
 
     // This listener lets us know when we are finished recording (when the videoView Stops)
@@ -306,38 +261,12 @@ public class DJFragment extends Fragment {
     };
 
 
-
-
-    // This Commented out listener is meant to mute the sound from the video view when a gridview
-    // item is selected for recording user actions.
-/*
-    MediaPlayer.OnPreparedListener PreparedListener = new MediaPlayer.OnPreparedListener(){
-
-        @Override
-        public void onPrepared(MediaPlayer m) {
-            try {
-                if (m.isPlaying()) {
-                    m.stop();
-                   m.release();
-                    m = new MediaPlayer();
-                }
-                m.setVolume(0f, 0f);
-                m.setLooping(false);
-            //    m.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-*/
-
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+ //   public void onButtonPressed(Uri uri) {
+ //       if (mListener != null) {
+ //           mListener.onFragmentInteraction(uri);
+ //       }
+  //  }
 
     @Override
     public void onAttach(Activity activity) {
@@ -348,7 +277,6 @@ public class DJFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-
     }
 
     @Override
@@ -356,17 +284,6 @@ public class DJFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-        else {
-        }
-    }
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -383,33 +300,6 @@ public class DJFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    public void showInstructionToast() {
-        Context context = getActivity().getApplicationContext();
-        CharSequence text = "Tap a video path to start recording.";
-        int duration = Toast.LENGTH_LONG;
 
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-    }
-
-    private class MyListAdapter extends ArrayAdapter<VideoThumbnail> {
-        public MyListAdapter() {
-            super(getActivity(), R.layout.grid_item, files);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View itemView = convertView;
-            if (itemView == null) {
-                itemView = getActivity().getLayoutInflater().inflate(R.layout.grid_item, parent, false);
-            }
-
-            VideoThumbnail video = files.get(position);
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            imageView.setImageBitmap(video.getThumb());
-
-            return itemView;
-        }
-    }
 
 }

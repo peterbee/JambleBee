@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="menu_load_project" type="id" />
+    <item name="menu_new_project" type="id" />
+    <item name="menu_save_project" type="id" />
+    <item name="menu_delete_project" type="id" />
+</resources>
