@@ -52,14 +52,14 @@ server/README.md
 
 Server Side Tests
 -----------------
-See "test" directory, which contains test video data and tests developed both
+See "server/test" directory, which contains test video data and tests developed both
 in java and java script.
 
 The java test code contains an ant file, use the following command for build
 instructions.
 
 ```
-ant -f tests/API/Java/build.xml -p
+ant -f server/tests/API/Java/build.xml -p
 ```
 
 Server Side Test Requirements
@@ -67,7 +67,7 @@ Server Side Test Requirements
 All dependencies are contained in the following directory.
 
 ```
-test/API/Java/lib/
+server/test/API/Java/lib/
 ```
 
 Current Release (Prototypes)
