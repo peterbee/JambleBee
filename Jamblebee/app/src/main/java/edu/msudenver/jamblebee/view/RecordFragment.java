@@ -493,7 +493,7 @@ public class RecordFragment extends Fragment {
      boolean prepareVideoRecorder(){
 
         // BEGIN_INCLUDE (configure_preview)
-        mCamera = CameraHelper.getDefaultCameraInstance();
+        mCamera = CameraHelper.getDefaultFrontFacingCameraInstance();
 
         // We need to make sure that our preview and recording video size are supported by the
         // camera. Query camera to find all the sizes and choose the optimal size given the
