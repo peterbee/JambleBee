@@ -67,7 +67,7 @@ public class JSONdata {
 
     public ArrayList<String> getProjectsNames(){
         Iterator<String> list = globalObject.keys();
-        ArrayList<String> listNames = new ArrayList<>();
+        ArrayList<String> listNames = new ArrayList<String>();
         while(list.hasNext()){
             listNames.add(list.next()) ;
         }

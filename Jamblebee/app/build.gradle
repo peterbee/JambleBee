@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 18
     buildToolsVersion "21.1.2"
 
     defaultConfig {
@@ -32,7 +32,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    compile (group: 'org.apache.httpcomponents' , name: 'httpmime' , version: '4.3.5') {
+    compile('org.apache.httpcomponents:httpmime:4.3.5') {
         exclude module: 'org.apache.httpcomponents:httpclient'
     }
     compile 'com.android.support:support-v4:21.0.0'
