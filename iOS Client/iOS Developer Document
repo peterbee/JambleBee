@@ -1,0 +1,50 @@
+iOS Developer Document - This document is trying to follow the "Just enough" idea and therefore is very terse. Additional information can be found in the code via comments. 
+
+The iOS client uses the Swift language opposed to objective-c. The choice was done due to the ease of use of the language and the fact that it is suppose to be the future of iOS development. It uses the storyboard to drive the layout of the UI and controllers to connect the logic to specific UI actions. 
+
+The project code is in the jambley folder. The NMRangeSlider folder is a simple objective-c library that provides a range slider. This is used to allow each video to change its start and end time. 
+
+Project Structure:
+
+jambley - Where the core code is located. Note that many of the controllers have a konstant singleton that is used to allow access from outside the controller. This is not best practice and as such needs to be restructured. Either separate the data that needs access out from the controllers or use the segue object passing pattern and pass the controller data to the views that need the information.  
+
+	AppDelegate - Default generated delegate
+
+	Main.storyboard - Storyboard used for the main UI. This is where any UI changes should go. 
+
+	Images.xcassets - Where any image assets go. There are a few basic images provide by xcode along with 2 buttons: play and record. 
+
+	LaunchScreen.xib - xib slash screen that is showed before the app starts
+
+	VideoStreamViewController - ViewController that was quickly used to test video streaming. Has very little use and can be remove. If removed, also delete its view from the storyboard 
+
+	ProjectData - The module contains code related to capturing and storing project information. Right now the two files in the directory are not used and were simply a placeholder for future implementations.
+
+	VideoCollection - Module for the collection view controller and any assisting code. This is the scroll area holding the projects videos
+		VideoCellData.swif - The reusable CollectionCell that holds any video data associated with a given cell. 
+		VideoCollectionViewController.swift - The controller for the collection of video cells. It is used to remove or add new videos to the project. 
+		VideoCollectionMainView.swift - A singleton class that is used by the video cells. It has a main view that the cells will animate there video onto when tapped. Any new views that would like to have the cells animate there videos onto a view can use this singleton by simple passing in the View that will hold the video.
+
+	RecordView - Module for the RecordViewController and any assisting code. This is the main view for recording videos.
+		RecordViewController.swift - Controller for the record view. Has a singleton that can be used to access its content from outside the controller. This could/should be redisgned to follow the object passing pattern of segues. 
+		CaptureSessionControl.swift - Manages the setup of devices for recording and the saving of newly recorded videos. There are missing checks in here for when a device is not found or a user does not allow the app to store/record/access videos. 
+
+	SettingsModals - Module for the various setting view modals. 
+		VideoSettingsViewController.swift - The controller for a view that manages the settings for a video. It will use what video is currently in the VideoCollectionMainView controller. 
+		RecordSettingsViewController.swift - The controller for changing record options such as camera, mic, and delay. 
+
+	TabController - The module for the tab view controller. It was used early on to allow multiple views but later on things were pulled and its use was minimized. It is useful as it allows swipes to change tabs with an animation and allows overflow of the tabs. It also makes it very easy to add a new view to the project. It could be refactored out based on the needs of the app.
+		TabController.swift - The tab controller and entry view for the application. Manages tabs by left or right swipes. 
+
+	DJView - Module for the Video djing view. This is bare bones and simpley functions like the record view without the recording functionality. 
+		VideoEditorViewController.swift - The view controller for video djing. The name needs to be refactored but as of right now swift does not allow for easy refactoring. 
+
+jambleyTests - Section for tests. Right now there are none...
+	jambleyTests.swift - generated placeholder for tests
+
+
+
+
+
+
+
