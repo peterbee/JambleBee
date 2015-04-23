@@ -9,7 +9,7 @@
 import UIKit
 
 class TabController: UITabBarController, UITabBarControllerDelegate {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,6 +23,10 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         view.addGestureRecognizer(rightSwipe)
         view.backgroundColor = UIColor.whiteColor()
         
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "orientationChanged",
+            name: UIDeviceOrientationDidChangeNotification,
+            object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,13 +64,57 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         var startPosition = who.view.layer.position;
         startPosition.x += direction;
         who.view.layer.position = startPosition;
-        
+         println(selectedIndex)
         UIView.animateWithDuration(0.13, animations: {
             who.view.layer.position = endPosition;
             }, completion: { (finished) in
                 NSLog("Animation completed.")
+                self.updateOrientationBasedOnTab()
         })
         
+    }
+
+//    used when the tab bar was visible
+//    override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem!) {
+//        updateOrientationBasedOnTab()
+//    }
+    
+    override func shouldAutorotate() -> Bool {
+        return true
+    }
+    
+    
+    override func viewWillAppear(animated: Bool) {
+    
+    }
+    //we want to start in landscape when the app first starts
+    //we cannot simple change things in viewDidAppear or viewDidload
+    //because they happen first and then the change selector is called
+    var justStarted = true
+    
+    func orientationChanged(){
+        if(justStarted){
+            justStarted = false
+            return
+        }
+        var orientation = UIDevice.currentDevice().orientation
+        if(orientation == UIDeviceOrientation.Portrait || orientation == UIDeviceOrientation.PortraitUpsideDown) {
+            self.selectedIndex = 1
+        } else if(orientation == UIDeviceOrientation.LandscapeRight ||
+            orientation == UIDeviceOrientation.LandscapeLeft) {
+            self.selectedIndex = 0
+        }
+        updateOrientationBasedOnTab()
+    }
+    
+    func updateOrientationBasedOnTab(){
+        if(self.selectedIndex == 0){
+            let value = UIInterfaceOrientation.LandscapeRight.rawValue
+            UIDevice.currentDevice().setValue(value, forKey: "orientation")
+        } else {
+            let value = UIInterfaceOrientation.Portrait.rawValue
+            UIDevice.currentDevice().setValue(value, forKey: "orientation")
+        }
     }
 
     /*

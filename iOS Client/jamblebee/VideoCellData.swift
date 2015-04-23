@@ -28,52 +28,85 @@ class VideoCellData: NSObject, UIImagePickerControllerDelegate, UINavigationCont
             return
         }
         if(cell.gestureRecognizers?.count < 1) {
-            var tap = cell.gestureRecognizers![0] as UITapGestureRecognizer;
-            cell.removeGestureRecognizer(tap)
+            cell.gestureRecognizers?.removeAll(keepCapacity: true)
         }
     }
     
-    func resetLayer(){
+    func reset(){
         if(isInMainView()) {
+            println(1)
             return;
         }
+        forceResetLayer()
+    }
+    
+    func forceResetLayer() {
         removeTapGesture()
         avlayer.removeFromSuperlayer()
         cell.layer.addSublayer(avlayer)
         avlayer.frame.size = cell.layer.frame.size
         avlayer.position = CGPoint(x: avlayer.frame.width/2, y: avlayer.frame.height/2)
+        //have to reset the gesture stuff due to collection reusing cells. 
+        //Basically, gestures respont to the wrong cells if we do not reset. 
         var tap = UITapGestureRecognizer(target: self, action: Selector("handleTap:"))
         cell.addGestureRecognizer(tap)
+        var swipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipe:"))
+        swipe.direction = UISwipeGestureRecognizerDirection.Up
+        cell.addGestureRecognizer(swipe)
     }
     
     func handleTap(sender:UITapGestureRecognizer) {
         if(avplayer.currentItem != nil) {
             togglePlayback()
             return;
+        } else {
+            avplayer.replaceCurrentItemWithPlayerItem(AVPlayerItem(URL: url))
         }
     }
     
     func togglePlayback(){
         playing = !playing;
-        if(playing && !kVideoEditorControllerState.recordingActions() ) {
+        if(playing && !kVideoEditorControllerState.recordingActions() && false) {
             avplayer.pause()
-        } else {
-            avplayer.play()
-            if(kVideoEditorControllerState.videoEditorViewController.recording) {
-                switchMainVideo()
-            }
+        } else if (kVideoCollectionMainView.videoCollectionMainView.mainVideoCellData.avplayer.currentItem == nil){
+            playVideo()
+        }
+        if(kVideoCollectionMainView.videoCollectionMainView.switchAble) {
+            switchMainVideo()
         }
     }
     
     func isInMainView() -> Bool {
-        return kVideoEditorControllerState.videoEditorViewController.isInMainVideoView(avplayer)
+        return kVideoCollectionMainView.videoCollectionMainView.isInMainVideoView(avplayer)
     }
     
     func switchMainVideo() {
         if(isInMainView()) {
+            kVideoCollectionMainView.videoCollectionMainView.setMainVideo(VideoCellData())
+            kRecordViewControllerState.pauseAllVideos();
             return
         }
-        kVideoEditorControllerState.videoEditorViewController.setMainVideo(self)
+        if(kVideoCollectionMainView.videoCollectionMainView.mainVideoCellData.avplayer.currentItem == nil) {
+            kRecordViewControllerState.playAllVideos()
+        }
+        kVideoCollectionMainView.videoCollectionMainView.setMainVideo(self)
+    }
+    
+    func handleSwipe(sender:UISwipeGestureRecognizer) {
+        if isInMainView() {
+            return
+        }
+         var videoGrid = kRecordViewControllerState.recordViewController.childViewControllers[0] as! VideoCollectionViewController
+        videoGrid.removeVideoCell(self)
+    }
+    
+    func playVideo(){
+        avplayer.seekToTime(startTime)
+        avplayer.play()
+    }
+    
+    func pauseVideo(){
+        avplayer.pause()
     }
     
     //setup listern for when the avplayer finishs playing
