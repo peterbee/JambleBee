@@ -40,6 +40,25 @@ Android Prototype Projects
 |CameraTest                  |Jamstagram  |LoadVideos       | MultipleActivies |
 |TestMultipleActivities2     |VideoPlayer |VideoProjectModel| EditView         |
 
+
+iOS 
+=======
+---
+
+Xcode was used to develop the iOS client application there for it is required to build, test, and run the application. 
+
+
+iOS Development Requirements
+--------------------------------
+* Xcode-beta 6.4 (6E7)
+** Xcode 6.3 (6D1002) should work but is not absolute
+*  device running iOS 8 or higher
+** device running iOS 7 should work but is not absolute
+
+iOS Base Project
+--------------------
+* iOS Client 
+
 Server Side
 ===========
 ---

@@ -4,7 +4,8 @@ iOS client is written in swift using Xcode. It uses default libs except for an o
 
 iOS Client Build instructions
 ----------------------
-* Xcode Version 6.1.1 (6A2008a) 
+* Xcode Version 6.4 beta (6E7)
+** Xcode Version 6.3.1 (6D1002) may work but is not guaranteed 
 * Xcode simulator or configured device
 
 An ealier or later version may or may not work
@@ -13,9 +14,9 @@ An ealier or later version may or may not work
 2. Double click on the 'jambley.xcodeproj' file to open the project in Xcode
 3. I the top left corner you will see what looks like a play and stop buttons. To the left of them is the name of the project 'jambley' with an arrow pointing to the current device that will be run. Click on the device name to open a drop down menu that has simulator device options along with any device currently connected. Select the device you wish to run on. 
 
-4. Click on the run button in the top left corner. It looks visual like a play button. 
+4. Click on the run button in the top left corner. It visually looks like a play button. 
 
-
+Note: You may have to setup provisioning profiles for your device. 
 
 iOS Test instructions
 --------------------

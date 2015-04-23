@@ -55,15 +55,11 @@ class VideoCollectionViewController: UICollectionViewController,UIImagePickerCon
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as UICollectionViewCell
-        
-        
+
         var data: VideoCellData = cells[indexPath.row] as VideoCellData
-        //data.removeTapGesture()
         data.cell = cell;
         data.resetLayer()
         cell.backgroundColor = UIColor(white: 0.9, alpha: 0.8)
-        println(indexPath.row);
-
         return cell
     }
     var cells: NSArray = []

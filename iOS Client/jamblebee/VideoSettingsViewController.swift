@@ -35,14 +35,14 @@ class VideoSettingsViewController: UIViewController {
     @IBAction func doneSaveSettings(segue:UIStoryboardSegue) {
         avlayer.player = nil
         avplayerController.player = nil
-        videoEditorControllerState.videoEditorViewController.restore()
+        kVideoEditorControllerState.videoEditorViewController.restore()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
-        currentCellData = videoEditorControllerState.videoEditorViewController.mainVideoCellData
+        currentCellData = kVideoEditorControllerState.videoEditorViewController.mainVideoCellData
         
-        videoEditorControllerState.videoEditorViewController.avlayer.player = nil
+        
         
         //currentCellData.avplayer.pause()
        
@@ -54,6 +54,7 @@ class VideoSettingsViewController: UIViewController {
         avlayer.player = currentCellData.avplayer
         avplayerController.player = currentCellData.avplayer
         switchLoop.setOn(currentCellData.loop, animated: true)
+        kVideoEditorControllerState.videoEditorViewController.avlayer.player = nil
     }
     
     @IBAction func valueChanged(sender: NMRangeSlider) {
